@@ -112,5 +112,5 @@ Route::middleware([RoleMiddleware::class . ':user'])->prefix('user')->name('user
     Route::post('/complaints', [ComplaintController::class, 'store'])->name('complaints.store');
 
     // Ranking
-    Route::get('/ranking', [UserRankingController::class, 'index'])->name('ranking');
+    Route::get('/ranking', [UserRankingController::class, 'ranking'])->name('ranking');
 });

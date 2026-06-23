@@ -3,7 +3,6 @@
 @section('content')
 <div class="min-h-screen bg-gradient-to-b from-blue-600 to-blue-800">
 
-    <!-- Header & Title -->
     <div class="relative px-6 pt-8 pb-16 text-white">
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-xl font-bold">SIMANTAB</h1>
@@ -13,7 +12,6 @@
             </a>
         </div>
 
-        <!-- Title Section -->
         <div class="text-center mb-8">
             <p class="text-xs uppercase tracking-widest opacity-70 mb-1">Leaderboard</p>
             <h2 class="text-3xl font-bold mb-2">Ranking Menabung</h2>
@@ -23,7 +21,6 @@
             </div>
         </div>
 
-        <!-- Premium Top Info Card -->
         <div class="relative bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 shadow-lg border border-white/10 backdrop-blur-sm hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
             <div class="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-6 -mt-6"></div>
             <div class="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-8 -mb-8"></div>
@@ -45,7 +42,6 @@
         </div>
     </div>
 
-    <!-- Quick Actions -->
     <div class="relative z-10 px-6 -mt-8 mb-8">
         <div class="grid grid-cols-4 gap-4">
             <a href="{{ route('user.dashboard') }}" class="flex flex-col items-center group">
@@ -80,10 +76,8 @@
         </form>
     </div>
 
-    <!-- Leaderboard & Rules Content Section -->
     <div class="bg-white rounded-t-3xl pt-8 pb-12 px-6 min-h-[55vh] space-y-8">
         
-        <!-- Table List Container -->
         <div>
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
@@ -91,7 +85,6 @@
                 </h2>
             </div>
 
-            <!-- Responsive Table Wrapper -->
             <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
@@ -105,47 +98,60 @@
                         </thead>
                         <tbody class="divide-y divide-gray-100 text-sm">
                             @forelse($rankings as $index => $rank)
-                            <tr class="hover:bg-gray-50/50 transition-colors">
-                                <!-- Rank Badges -->
-                                <td class="py-4 px-4 text-center font-bold">
-                                    @if($index == 0)
-                                        <span class="inline-flex items-center justify-center w-7 h-7 bg-amber-100 text-amber-600 rounded-full text-sm">🥇</span>
-                                    @elseif($index == 1)
-                                        <span class="inline-flex items-center justify-center w-7 h-7 bg-slate-100 text-slate-500 rounded-full text-sm">🥈</span>
-                                    @elseif($index == 2)
-                                        <span class="inline-flex items-center justify-center w-7 h-7 bg-amber-600/10 text-amber-700 rounded-full text-sm">🥉</span>
-                                    @else
-                                        <span class="text-gray-400 text-xs font-semibold">#{{ $index + 1 }}</span>
-                                    @endif
-                                </td>
-                                
-                                <!-- Identity -->
-                                <td class="py-4 px-4">
-                                    <div class="font-semibold text-gray-800 truncate max-w-[120px] sm:max-w-none">{{ $rank->nama_siswa }}</div>
-                                    <div class="text-[11px] text-gray-400 mt-0.5">{{ $rank->nomor_induk }}</div>
-                                </td>
-                                
-                                <!-- Frequency -->
-                                <td class="py-4 px-4 text-center">
-                                    <span class="inline-flex items-center font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg text-xs">
-                                        {{ $rank->frekuensi_menabung }}x
-                                    </span>
-                                </td>
-                                
-                                <!-- Total Saving -->
-                                <td class="py-4 px-4 text-right font-bold text-emerald-600 whitespace-nowrap">
-                                    Rp{{ number_format($rank->total_nominal, 0, ',', '.') }}
-                                </td>
-                            </tr>
+                                @if($index == 0)
+                                    <tr class="bg-yellow-100/90 border-l-4 border-yellow-500 hover:bg-yellow-200/90 transition-colors duration-150">
+                                        <td class="py-4 px-4 text-center font-black text-base text-yellow-800">
+                                            #1
+                                        </td>
+                                        <td class="py-4 px-4">
+                                            <div class="font-bold text-slate-900">
+                                                {{ $rank->name }}
+                                            </div>
+                                            <div class="text-slate-600 text-xs flex items-center gap-1 mt-0.5">
+                                                {{ $rank->nis }}
+                                            </div>
+                                        </td>
+                                        <td class="py-4 px-4 text-center">
+                                            <span class="inline-flex items-center gap-1 font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full text-xs border border-blue-200">
+                                                {{ $rank->monthly_transaction_count }} Kali
+                                            </span>
+                                        </td>
+                                        <td class="py-4 px-4 text-right font-bold text-emerald-700">
+                                            Rp {{ number_format($rank->monthly_transaction_amount ?? 0, 0, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                @else
+                                    <tr class="hover:bg-gray-50 transition-colors duration-150 text-gray-700">
+                                        <td class="py-4 px-4 text-center font-semibold text-gray-400">
+                                            #{{ $index + 1 }}
+                                        </td>
+                                        <td class="py-4 px-4">
+                                            <div class="font-semibold text-gray-900">
+                                                {{ $rank->name }}
+                                            </div>
+                                            <div class="text-gray-500 text-xs flex items-center gap-1 mt-0.5">
+                                                {{ $rank->nis }}
+                                            </div>
+                                        </td>
+                                        <td class="py-4 px-4 text-center">
+                                            <span class="inline-flex items-center gap-1 font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded-full text-xs">
+                                                {{ $rank->monthly_transaction_count }} Kali
+                                            </span>
+                                        </td>
+                                        <td class="py-4 px-4 text-right font-bold text-gray-900">
+                                            Rp {{ number_format($rank->monthly_transaction_amount ?? 0, 0, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                @endif
                             @empty
-                            <tr>
-                                <td colspan="4" class="py-12 text-center text-gray-400">
-                                    <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
-                                        <i class="ph ph-folder-open text-gray-300 text-2xl"></i>
-                                    </div>
-                                    <p class="text-sm text-gray-500">Belum ada aktivitas menabung</p>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td colspan="4" class="py-12 text-center text-gray-400">
+                                        <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <i class="ph ph-folder-open text-gray-300 text-2xl"></i>
+                                        </div>
+                                        <p class="text-sm text-gray-500">Belum ada aktivitas menabung</p>
+                                    </td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -153,7 +159,6 @@
             </div>
         </div>
 
-        <!-- Rules Section (Styled Like Premium Info Block) -->
         <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100 space-y-3">
             <h3 class="font-bold text-gray-800 flex items-center gap-2 text-sm uppercase tracking-wider">
                 <i class="ph ph-info text-blue-600 text-lg"></i> Aturan Pemeringkatan

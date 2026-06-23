@@ -40,34 +40,37 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100 dark:divide-gray-700 text-sm">
                     @forelse($rankings as $index => $rank)
-                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors duration-150">
-                        <td class="py-4 px-6 text-center font-bold text-gray-800 dark:text-gray-200">
+                    {{-- Highlight warna kuning khusus untuk Peringkat 1 --}}
+                    <tr class="transition-colors duration-150 
+                        @if($index == 0) 
+                            bg-amber-50/80 dark:bg-amber-950/20 hover:bg-amber-100/80 dark:hover:bg-amber-900/30
+                        @else 
+                            hover:bg-gray-100 dark:hover:bg-gray-700/50 
+                        @endif">
+                                    
+                        <td class="py-4 px-6 text-center font-bold">
                             @if($index == 0)
-                                <span class="inline-block transform scale-125">🥇</span>
-                            @elseif($index == 1)
-                                <span class="inline-block transform scale-125">🥈</span>
-                            @elseif($index == 2)
-                                <span class="inline-block transform scale-125">🥉</span>
+                                <span class="text-amber-600 dark:text-amber-400 font-extrabold">#1</span>
                             @else
                                 <span class="text-gray-400 dark:text-gray-500 font-semibold">#{{ $index + 1 }}</span>
                             @endif
                         </td>
                         
                         <td class="py-4 px-6">
-                            <div class="font-semibold text-gray-900 dark:text-gray-100">{{ $rank->nama_siswa }}</div>
+                            <div class="font-semibold text-gray-900 dark:text-gray-100">{{ $rank->name }}</div>
                             <div class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-0.5">
-                                <i class="ph ph-identification-card opacity-70"></i> {{ $rank->nomor_induk }}
+                                <i class="ph ph-identification-card opacity-70"></i> {{ $rank->nis }}
                             </div>
                         </td>
                         
                         <td class="py-4 px-6 text-center">
                             <span class="inline-flex items-center gap-1 font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-3 py-1 rounded-full text-xs border border-blue-100 dark:border-blue-900/50">
-                                {{ $rank->frekuensi_menabung }} Kali
+                                {{ $rank->monthly_transaction_count }} Kali
                             </span>
                         </td>
                         
                         <td class="py-4 px-6 text-right font-bold text-emerald-600 dark:text-emerald-400">
-                            Rp {{ number_format($rank->total_nominal, 0, ',', '.') }}
+                            Rp {{ number_format($rank->monthly_transaction_amount ?? 0, 0, ',', '.') }}
                         </td>
                     </tr>
                     @empty
