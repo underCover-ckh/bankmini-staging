@@ -52,6 +52,26 @@ class User extends Authenticatable
         ];
     }
 
+    public static function monthlySavingsRanking(int $limit = 10)
+    {
+        return static::where('role', 'user')
+            ->withCount(['transactions as monthly_transaction_count' => function ($query) {
+                $query->where('amount', '>', 0)
+                    ->whereYear('created_at', now()->year)
+                    ->whereMonth('created_at', now()->month);
+            }])
+            ->withSum(['transactions as monthly_transaction_amount' => function ($query) {
+                $query->where('amount', '>', 0)
+                    ->whereYear('created_at', now()->year)
+                    ->whereMonth('created_at', now()->month);
+            }], 'amount')
+            ->having('monthly_transaction_count', '>', 0)
+            ->orderByDesc('monthly_transaction_count')
+            ->orderByDesc('monthly_transaction_amount')
+            ->take($limit)
+            ->get();
+    }
+
     public function transactions()
     {
         return $this->hasMany(Transaction::class);

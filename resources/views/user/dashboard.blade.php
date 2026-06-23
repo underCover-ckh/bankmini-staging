@@ -83,38 +83,60 @@
         </div>
     </div>
 
-        <!-- Quick Actions Grid -->
-        <div class="grid grid-cols-4 gap-3 mb-8">
-            <a href="{{ route('user.transactions') }}"
-                class="flex flex-col items-center justify-center bg-white hover:bg-blue-50 rounded-xl p-3 shadow-sm hover:shadow-md transition-all duration-200">
-                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-2">
-                    <i class="ph ph-currency-circle-dollar text-blue-600 text-xl"></i>
-                </div>
-                <span class="text-xs font-medium text-gray-700">Transactions</span>
-            </a>
-            <a href="{{ route('user.account') }}"
-                class="flex flex-col items-center justify-center bg-white hover:bg-blue-50 rounded-xl p-3 shadow-sm hover:shadow-md transition-all duration-200">
-                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-2">
-                    <i class="ph ph-user text-purple-600 text-xl"></i>
-                </div>
-                <span class="text-xs font-medium text-gray-700">Account</span>
-            </a>
-            <a href="{{ route('user.about') }}"
-                class="flex flex-col items-center justify-center bg-white hover:bg-blue-50 rounded-xl p-3 shadow-sm hover:shadow-md transition-all duration-200">
-                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-2">
-                    <i class="ph ph-buildings text-green-600 text-xl"></i>
-                </div>
-                <span class="text-xs font-medium text-gray-700">About</span>
-            </a>
-            <a href="{{ route('logout') }}"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                class="flex flex-col items-center justify-center bg-white hover:bg-blue-50 rounded-xl p-3 shadow-sm hover:shadow-md transition-all duration-200">
-                <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-2">
-                    <i class="ph ph-sign-out text-red-600 text-xl"></i>
-                </div>
-                <span class="text-xs font-medium text-gray-700">Logout</span>
-            </a>
+    <!-- Quick Actions Grid - Modern Horizontal Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+        <!-- Transactions -->
+        <a href="{{ route('user.transactions') }}"
+        class="flex items-center gap-4 bg-white hover:bg-blue-50/50 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100/70 group">
+            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                <i class="ph ph-currency-circle-dollar text-2xl"></i>
+            </div>
+        <div class="overflow-hidden">
+            <span class="block text-sm font-semibold text-gray-800 truncate">Transactions</span>
         </div>
+        </a>
+        <!-- Ranking -->
+        <a href="{{ route('user.ranking') }}"
+        class="flex items-center gap-4 bg-white hover:bg-amber-50/50 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100/70 group">
+            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                <i class="ph ph-trophy text-2xl"></i>
+            </div>
+            <div class="overflow-hidden">
+                <span class="block text-sm font-semibold text-gray-800 truncate">Ranking</span>
+            </div>
+        </a>
+        <!-- Account -->
+        <a href="{{ route('user.account') }}"
+        class="flex items-center gap-4 bg-white hover:bg-purple-50/50 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100/70 group">
+            <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                <i class="ph ph-user text-2xl"></i>
+            </div>
+            <div class="overflow-hidden">
+                <span class="block text-sm font-semibold text-gray-800 truncate">Account</span>
+            </div>
+        </a>
+        <!-- About -->
+        <a href="{{ route('user.about') }}"
+            class="flex items-center gap-4 bg-white hover:bg-green-50/50 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100/70 group">
+            <div class="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                <i class="ph ph-buildings text-2xl"></i>
+            </div>
+            <div class="overflow-hidden">
+                <span class="block text-sm font-semibold text-gray-800 truncate">About</span>
+            </div>
+        </a>
+        <!-- Logout -->
+        <a href="{{ route('logout') }}"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+            class="flex items-center gap-4 bg-white hover:bg-red-50/50 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100/70 group">
+            <div class="w-12 h-12 bg-red-50 text-red-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                <i class="ph ph-sign-out text-2xl"></i>
+            </div>
+            <div class="overflow-hidden">
+                <span class="block text-sm font-semibold text-gray-800 truncate">Logout</span>
+            </div>
+        </a>
+    </div>
         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
             @csrf
         </form>

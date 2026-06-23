@@ -49,6 +49,11 @@
                 <a href="{{ route('teller.users') }}" class="block px-4 py-2 hover:bg-blue-100 dark:hover:bg-gray-700 rounded">
                     <i class="fas fa-users mr-2"></i> All Users
                 </a>
+
+                <!-- Ranking -->
+                <a href="{{ route('teller.ranking') }}" class="block px-4 py-2 hover:bg-blue-100 dark:hover:bg-gray-700 rounded">
+                    <i class="fas fa-trophy mr-2"></i> Ranking
+                </a>
             </nav>
         </div>
 
