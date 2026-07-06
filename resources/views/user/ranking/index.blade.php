@@ -17,7 +17,9 @@
             <h2 class="text-3xl font-bold mb-2">Ranking Menabung</h2>
             <div class="inline-flex items-center bg-white/10 px-4 py-1 rounded-full backdrop-blur-sm">
                 <i class="ph ph-calendar text-sm mr-1.5 text-amber-300"></i>
-                <span class="text-sm">Periode: <strong class="text-amber-300">{{ $namaBulan }}</strong></span>
+                <span class="text-sm">Periode: <strong class="text-amber-300">
+                    {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}
+                </strong></span>
             </div>
         </div>
 
@@ -93,7 +95,6 @@
                                 <th class="py-4 px-4 w-16 text-center">Rank</th>
                                 <th class="py-4 px-4">Nasabah</th>
                                 <th class="py-4 px-4 text-center">Frekuensi</th>
-                                <th class="py-4 px-4 text-right">Total</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 text-sm">
@@ -116,9 +117,6 @@
                                                 {{ $rank->monthly_transaction_count }} Kali
                                             </span>
                                         </td>
-                                        <td class="py-4 px-4 text-right font-bold text-emerald-700">
-                                            Rp {{ number_format($rank->monthly_transaction_amount ?? 0, 0, ',', '.') }}
-                                        </td>
                                     </tr>
                                 @else
                                     <tr class="hover:bg-gray-50 transition-colors duration-150 text-gray-700">
@@ -138,9 +136,6 @@
                                                 {{ $rank->monthly_transaction_count }} Kali
                                             </span>
                                         </td>
-                                        <td class="py-4 px-4 text-right font-bold text-gray-900">
-                                            Rp {{ number_format($rank->monthly_transaction_amount ?? 0, 0, ',', '.') }}
-                                        </td>
                                     </tr>
                                 @endif
                             @empty
@@ -157,6 +152,25 @@
                     </table>
                 </div>
             </div>
+
+            @if($actualRank)
+                <div class="mt-4 p-4 rounded-xl bg-blue-50 border border-blue-100 flex justify-between items-center shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                            #{{ $actualRank }}
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 font-medium">Posisi Anda Saat Ini</p>
+                            <p class="text-sm font-bold text-gray-800">Yuk tingkatkan terus frekuensi menabungmu!</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="block text-xs font-bold text-blue-700">
+                            {{ $userTransactionCount }}x Transaksi
+                        </span>
+                    </div>
+                </div>
+            @endif
         </div>
 
         <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100 space-y-3">
