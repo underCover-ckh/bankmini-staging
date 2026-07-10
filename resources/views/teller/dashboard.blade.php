@@ -8,7 +8,7 @@
 </div>
 
 <!-- Cards -->
-<div class="grid grid-cols-2 gap-6 mb-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-6">
     <div class="bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-lg p-6">
         <h2 class="text-lg font-semibold">Total Saldo</h2>
         <p class="text-4xl font-bold mt-4">Rp {{ number_format($totalSaldo, 0, ',', '.') }}</p>

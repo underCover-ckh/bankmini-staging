@@ -6,7 +6,7 @@
     <p class="text-gray-600 dark:text-gray-400">Periode Berjalan: <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $namaBulan }}</span></p>
 </div>
 
-<div class="grid grid-cols-2 gap-6 mb-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-6">
     <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl shadow-md p-6">
         <h2 class="text-lg font-semibold flex items-center gap-2 text-white">
             <i class="ph ph-trophy text-xl text-amber-300"></i> Apresiasi Bulanan
