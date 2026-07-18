@@ -46,7 +46,7 @@
         <div class="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100">
             <!-- Form Header -->
             <div class="bg-gradient-to-r from-blue-800 to-blue-900 p-6">
-                <h2 class="text-xl font-semibold text-white">Internet Banking Login</h2>
+                <h2 class="text-xl font-semibold text-white">Login Page</h2>
                 <p class="text-blue-100 text-sm mt-1">Silahkan masuk untuk akses akun Anda</p>
             </div>
 
