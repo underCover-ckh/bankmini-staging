@@ -10,10 +10,6 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     public function index() {
-<<<<<<< Updated upstream
-=======
-        
->>>>>>> Stashed changes
         $user = Auth::user();
         $transactions = Transaction::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')

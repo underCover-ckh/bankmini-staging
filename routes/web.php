@@ -15,8 +15,10 @@ use App\Http\Controllers\User\AboutController;
 use App\Http\Controllers\User\ComplaintController;
 use App\Http\Controllers\Teller\DashboardController as TellerDashboardController;
 use App\Http\Controllers\Teller\TransactionController as TellerTransactionController;
+use App\Http\Controllers\Teller\RankingController as TellerRankingController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\User\RankingController as UserRankingController;
 
 // Route untuk halaman utama
 Route::get('/', function () {
@@ -83,6 +85,9 @@ Route::middleware([RoleMiddleware::class . ':teller'])->prefix('teller')->name('
 
     // Daftar Pengguna
     Route::get('/users', [TellerDashboardController::class, 'users'])->name('users');
+
+    // Ranking
+    Route::get('/ranking', [TellerRankingController::class, 'ranking'])->name('ranking');
 });
 
 // Route untuk user
@@ -105,4 +110,7 @@ Route::middleware([RoleMiddleware::class . ':user'])->prefix('user')->name('user
     // Keluhan
     Route::get('/complaints/create', [ComplaintController::class, 'create'])->name('complaints.create');
     Route::post('/complaints', [ComplaintController::class, 'store'])->name('complaints.store');
+
+    // Ranking
+    Route::get('/ranking', [UserRankingController::class, 'ranking'])->name('ranking');
 });

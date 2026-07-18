@@ -16,6 +16,7 @@ class RankingController extends Controller
     public function ranking()
     {
         
+        Carbon::setTestNow('2026-08-01 10:00:00');
         $namaBulan = Carbon::now()->translatedFormat('F Y');
 
         // 1. Ambil data Top 10 untuk tabel utama
