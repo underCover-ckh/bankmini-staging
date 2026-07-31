@@ -4,11 +4,11 @@
     <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
         <!-- Header Section -->
         <div class="flex items-center justify-between mb-8">
-            <button onclick="history.back()"
-                class="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors">
+            <a href="{{ route('user.dashboard') }}"
+            class="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors">
                 <i class="ph ph-arrow-left text-xl"></i>
-                <span class="font-medium">Back</span>
-            </button>
+                <span class="font-medium">Home</span>
+            </a>
             <h1 class="text-2xl font-bold text-gray-800">Account Settings</h1>
             <div class="w-8"></div> <!-- Spacer for balance -->
         </div>
@@ -59,31 +59,35 @@
 
         <!-- Update Name Section -->
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
-            <div class="p-6 border-b border-gray-100">
-                <h2 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <i class="ph ph-user-circle text-blue-500 mr-3 text-xl"></i>
-                    Update Profile Information
-                </h2>
-            </div>
-            <div class="p-6">
-                <form action="{{ route('user.account.updateName') }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="space-y-4">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                            <div class="relative">
-                                <input type="text" id="name" name="name" value="{{ $user->name }}" required
-                                    class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <i class="ph ph-user text-gray-400"></i>
-                                </div>
+        <div class="p-6 border-b border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-800">
+                <i class="ph ph-user-circle text-blue-500 mr-3 text-xl"></i>
+                Update Profile Information
+            </h2>
+        </div>
+        <div class="p-6">
+            <form action="{{ route('user.account.updateName') }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                        <div class="relative">
+                            <input type="text" id="name" name="name" value="{{ $user->name }}" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-200  
+                                    bg-white
+                                    text-gray-900
+                                    focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all 
+                                    placeholder-gray-400">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                <i class="ph ph-user text-gray-400"></i>
                             </div>
                         </div>
-                        <button type="submit"
-                            class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium py-3 px-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm flex items-center justify-center">
-                            <i class="ph ph-floppy-disk mr-2"></i> Save Changes
-                        </button>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium py-3 px-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm flex items-center justify-center">
+                        <i class="ph ph-floppy-disk mr-2"></i> Save Changes
+                    </button>
                     </div>
                 </form>
             </div>
