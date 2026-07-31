@@ -7,7 +7,7 @@
             <a href="{{ route('user.dashboard') }}"
             class="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors">
                 <i class="ph ph-arrow-left text-xl"></i>
-                <span class="font-medium">Back</span>
+                <span class="font-medium">Home</span>
             </a>
             <h1 class="text-2xl font-bold text-gray-800">Account Settings</h1>
             <div class="w-8"></div> <!-- Spacer for balance -->
@@ -58,9 +58,9 @@
         </div>
 
         <!-- Update Name Section -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden mb-6">
-        <div class="p-6 border-b border-gray-100 dark:border-gray-700">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+        <div class="p-6 border-b border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-800">
                 <i class="ph ph-user-circle text-blue-500 mr-3 text-xl"></i>
                 Update Profile Information
             </h2>
@@ -71,16 +71,16 @@
                 @method('PUT')
                 <div class="space-y-4">
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                         <div class="relative">
                             <input type="text" id="name" name="name" value="{{ $user->name }}" required
-                                class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
-                                    bg-white dark:bg-gray-900 
-                                    text-gray-900 dark:text-white 
+                                class="w-full px-4 py-3 rounded-lg border border-gray-200  
+                                    bg-white
+                                    text-gray-900
                                     focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all 
-                                    placeholder-gray-400 dark:placeholder-gray-500">
+                                    placeholder-gray-400">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <i class="ph ph-user text-gray-400 dark:text-gray-500"></i>
+                                <i class="ph ph-user text-gray-400"></i>
                             </div>
                         </div>
                     </div>

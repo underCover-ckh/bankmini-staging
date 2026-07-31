@@ -65,6 +65,7 @@ class User extends Authenticatable
                     ->whereYear('created_at', now()->year)
                     ->whereMonth('created_at', now()->month);
             }], 'amount')
+            ->having('monthly_transaction_count', '>', 0)
             ->orderByDesc('monthly_transaction_count') ->orderByRaw('COALESCE(monthly_transaction_amount, 0) DESC')
             ->orderBy('name', 'asc')
             ->take($limit)

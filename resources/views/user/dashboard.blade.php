@@ -105,7 +105,7 @@
                             <div class="w-full bg-gradient-to-t from-blue-50 to-blue-100/70 rounded-t-xl flex flex-col items-center justify-between py-4 shadow-md border-t-2 border-x border-blue-200/60" style="height: 115px;">
                                 <div class="px-1 w-full">
                                     <p class="text-sm font-black text-blue-900 truncate">{{ explode(' ', $siswa1->name)[0] }}</p>
-                                    <p class="text-[9px] text-blue-500 font-bold tracking-wider uppercase">Top Saver</p>
+                                    <p class="text-[9px] text-blue-500 font-bold tracking-wider uppercase">Rank 1</p>
                                 </div>
                                 <span class="text-3xl font-extrabold text-blue-600 leading-none">1</span>
                             </div>
@@ -124,7 +124,7 @@
                                     <p class="text-xs font-black text-amber-900 truncate">{{ explode(' ', $siswa3->name)[0] }}</p>
                                     <p class="text-[9px] text-amber-600 font-medium">Rank 3</p>
                                 </div>
-                                <span class="text-xl font-extrabold text-amber-400 leading-none">3</span>
+                                <span class="text-lg font-extrabold text-amber-400 leading-none">3</span>
                             </div>
                         </div>
                     @else
