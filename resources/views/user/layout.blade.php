@@ -36,7 +36,7 @@
 
     <!-- Footer -->
     <!-- <footer class="bg-gray-800 text-white text-center p-4 mt-6">
-        <p>&copy; {{ date('Y') }} Bank Mini. All rights reserved.</p>
+        <p>&copy; {{ date('Y') }} Bank Mini. All rights reserved. SM Studio</p>
     </footer> --> 
 </body>
 </html>
