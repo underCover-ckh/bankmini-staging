@@ -27,12 +27,13 @@
                     href="{{ route('teller.users') }}" 
                     class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition duration-300 text-center px-3 py-1"
                 >
-                    Reset
+                    ✕ Reset
                 </a>
             @endif
         </form>
     </div>
-    <!-- Tabel Desktop & Mobile Wrapper -->
+
+    <!-- Tabel Desktop -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-200">
         
         <!-- Tabel Desktop -->
