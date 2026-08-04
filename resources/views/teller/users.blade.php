@@ -17,7 +17,7 @@
                 >
                 <button 
                     type="submit" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-lg transition duration-300 flex-shrink-0"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-lg transition duration-300"
                 >
                     Cari
                 </button>
@@ -27,14 +27,15 @@
                     href="{{ route('teller.users') }}" 
                     class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition duration-300 text-center px-3 py-1"
                 >
-                    ✕ Reset
+                    Reset
                 </a>
             @endif
         </form>
     </div>
-
-    <!-- Tabel Desktop -->
+    <!-- Tabel Desktop & Mobile Wrapper -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+        
+        <!-- Tabel Desktop -->
         <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[650px]">
                 <thead>
