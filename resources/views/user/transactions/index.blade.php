@@ -6,7 +6,6 @@
     <!-- Header -->
     <div class="relative px-6 pt-8 pb-16 text-white">
         <div class="flex justify-between items-center mb-8">
-            <h1 class="text-xl font-bold">SIMANTAB</h1>
             <a href="{{ route('user.complaints.create') }}"
                class="flex items-center space-x-2 bg-gradient-to-br from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-blue-600 rounded-full px-4 py-2 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100">
                 <i class="ph ph-headset text-lg"></i>

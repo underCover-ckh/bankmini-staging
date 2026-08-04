@@ -99,21 +99,19 @@
 
                         <!-- Message -->
                         <div>
-    <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Complaint Details</label>
-    <div class="relative">
-        <textarea id="message" name="message" rows="5" required
-            class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black transition-all"
-            placeholder="Describe your complaint or issue in detail...">{{ old('message') }}</textarea>
-        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none top-3">
-            <i class="ph ph-chat-teardrop-text text-gray-400"></i>
-        </div>
-    </div>
-</div>
-
-
-                        <!-- Submit Button -->
-                        <button type="submit"
-                            class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium py-3 px-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm flex items-center justify-center">
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Complaint Details</label>
+                            <div class="relative">
+                                <textarea id="message" name="message" rows="5" required
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black transition-all"
+                                    placeholder="Describe your complaint or issue in detail...">{{ old('message') }}</textarea>
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none top-3">
+                                        <i class="ph ph-chat-teardrop-text text-gray-400"></i>
+                                    </div>
+                            </div>
+                        </div>
+                    <!-- Submit Button -->
+                    <button type="submit"
+                        class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium py-3 px-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm flex items-center justify-center">
                             <i class="ph ph-paper-plane-right mr-2"></i> Submit Complaint
                         </button>
                     </div>
