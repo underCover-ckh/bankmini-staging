@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 
 class User extends Authenticatable
 {
@@ -52,21 +53,29 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Ranking menabung 2 bulan terakhir terhitung bergulir dari hari ini (Rolling 2 Months)
+     */
     public static function monthlySavingsRanking(int $limit = 10)
     {
+        // Tanggal hari ini (misal: 6 Agustus 2026)
+        $endDate = now()->endOfDay();
+
+        // Tepat 2 bulan ke belakang dari hari ini (misal: 6 Juni 2026)
+        $startDate = now()->subMonths(2)->startOfDay();
+
         return static::whereNotNull('nis')
-            ->withCount(['transactions as monthly_transaction_count' => function ($query) {
+            ->withCount(['transactions as monthly_transaction_count' => function ($query) use ($startDate, $endDate) {
                 $query->where('amount', '>', 0)
-                    ->whereYear('created_at', now()->year)
-                    ->whereMonth('created_at', now()->month);
+                    ->whereBetween('created_at', [$startDate, $endDate]);
             }])
-            ->withSum(['transactions as monthly_transaction_amount' => function ($query) {
+            ->withSum(['transactions as monthly_transaction_amount' => function ($query) use ($startDate, $endDate) {
                 $query->where('amount', '>', 0)
-                    ->whereYear('created_at', now()->year)
-                    ->whereMonth('created_at', now()->month);
+                    ->whereBetween('created_at', [$startDate, $endDate]);
             }], 'amount')
             ->having('monthly_transaction_count', '>', 0)
-            ->orderByDesc('monthly_transaction_count') ->orderByRaw('COALESCE(monthly_transaction_amount, 0) DESC')
+            ->orderByDesc('monthly_transaction_count')
+            ->orderByRaw('COALESCE(monthly_transaction_amount, 0) DESC')
             ->orderBy('name', 'asc')
             ->take($limit)
             ->get();
