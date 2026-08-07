@@ -53,33 +53,124 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Ranking menabung 2 bulan terakhir terhitung bergulir dari hari ini (Rolling 2 Months)
-     */
-    public static function monthlySavingsRanking(int $limit = 10)
-    {
-        // Tanggal hari ini (misal: 6 Agustus 2026)
-        $endDate = now()->endOfDay();
+/**
+ * Mengambil periode ranking aktif.
+ *
+ * Periode:
+ * Agustus - September
+ * Oktober - November
+ * Desember - Januari
+ * Februari - Maret
+ * April - Mei
+ * Juni - Juli
+ */
+public static function getCurrentRankingPeriod(): array
+{
+    $today = now();
 
-        // Tepat 2 bulan ke belakang dari hari ini (misal: 6 Juni 2026)
-        $startDate = now()->subMonths(2)->startOfDay();
+    $month = $today->month;
+    $year = $today->year;
 
-        return static::whereNotNull('nis')
-            ->withCount(['transactions as monthly_transaction_count' => function ($query) use ($startDate, $endDate) {
-                $query->where('amount', '>', 0)
-                    ->whereBetween('created_at', [$startDate, $endDate]);
-            }])
-            ->withSum(['transactions as monthly_transaction_amount' => function ($query) use ($startDate, $endDate) {
-                $query->where('amount', '>', 0)
-                    ->whereBetween('created_at', [$startDate, $endDate]);
-            }], 'amount')
-            ->having('monthly_transaction_count', '>', 0)
-            ->orderByDesc('monthly_transaction_count')
-            ->orderByRaw('COALESCE(monthly_transaction_amount, 0) DESC')
-            ->orderBy('name', 'asc')
-            ->take($limit)
-            ->get();
+    switch ($month) {
+
+        case 8:
+        case 9:
+            $start = Carbon::create($year, 8, 1)->startOfDay();
+            break;
+
+        case 10:
+        case 11:
+            $start = Carbon::create($year, 10, 1)->startOfDay();
+            break;
+
+        case 12:
+            $start = Carbon::create($year, 12, 1)->startOfDay();
+            break;
+
+        case 1:
+            $start = Carbon::create($year - 1, 12, 1)->startOfDay();
+            break;
+
+        case 2:
+        case 3:
+            $start = Carbon::create($year, 2, 1)->startOfDay();
+            break;
+
+        case 4:
+        case 5:
+            $start = Carbon::create($year, 4, 1)->startOfDay();
+            break;
+
+        default:
+            // Juni - Juli
+            $start = Carbon::create($year, 6, 1)->startOfDay();
+            break;
     }
+
+    $end = $start->copy()->addMonth()->endOfMonth();
+
+    return [
+        'start' => $start,
+        'end' => $end,
+        'label' => $start->translatedFormat('F') . ' - ' . $end->translatedFormat('F Y')
+    ];
+}
+
+
+/**
+ * Ranking Menabung Periode 2 Bulanan
+ *
+ * Urutan Ranking:
+ * 1. Jumlah hari menabung (konsistensi)
+ * 2. Jumlah transaksi
+ * 3. Saldo tabungan
+ */
+public static function monthlySavingsRanking(int $limit = 10)
+{
+    //Carbon::setTestNow('01-10-2026');
+    $period = static::getCurrentRankingPeriod();
+
+    $startDate = $period['start'];
+    $endDate   = $period['end'];
+
+    return static::query()
+        ->select('users.*')
+        ->whereNotNull('nis')
+
+        // Jumlah transaksi
+        ->selectSub(function ($query) use ($startDate, $endDate) {
+            $query->from('transactions')
+                ->selectRaw('COUNT(*)')
+                ->whereColumn('transactions.user_id', 'users.id')
+                ->where('amount', '>', 0)
+                ->whereBetween('created_at', [$startDate, $endDate]);
+        }, 'transaction_count')
+
+        // Jumlah hari berbeda menabung
+        ->selectSub(function ($query) use ($startDate, $endDate) {
+            $query->from('transactions')
+                ->selectRaw('COUNT(DISTINCT DATE(created_at))')
+                ->whereColumn('transactions.user_id', 'users.id')
+                ->where('amount', '>', 0)
+                ->whereBetween('created_at', [$startDate, $endDate]);
+        }, 'saving_days')
+
+        // Hanya siswa yang menabung pada periode ini
+        ->whereExists(function ($query) use ($startDate, $endDate) {
+            $query->from('transactions')
+                ->whereColumn('transactions.user_id', 'users.id')
+                ->where('amount', '>', 0)
+                ->whereBetween('created_at', [$startDate, $endDate]);
+        })
+
+        ->orderByDesc('saving_days')
+        ->orderByDesc('transaction_count')
+        ->orderByDesc('saldo')
+        ->orderBy('name')
+
+        ->limit($limit)
+        ->get();
+}
 
     public function transactions()
     {

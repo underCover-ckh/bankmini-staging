@@ -5,7 +5,6 @@
 
     <div class="relative px-6 pt-8 pb-16 text-white">
         <div class="flex justify-between items-center mb-8">
-            <h1 class="text-xl font-bold">SIMANTAB</h1>
             <a href="{{ route('user.complaints.create') }}"
                class="flex items-center space-x-2 bg-gradient-to-br from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-blue-600 rounded-full px-4 py-2 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100">
                 <i class="ph ph-headset text-lg"></i>
@@ -18,7 +17,7 @@
             <div class="inline-flex items-center bg-white/10 px-4 py-1 rounded-full backdrop-blur-sm">
                 <i class="ph ph-calendar text-sm mr-1.5 text-amber-300"></i>
                 <span class="text-sm">Periode: <strong class="text-amber-300">
-                    {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}
+                    {{ $namaBulan }}
                 </strong></span>
             </div>
         </div>
@@ -33,12 +32,12 @@
                         <i class="ph ph-gift text-2xl text-amber-300"></i>
                     </div>
                     <div>
-                        <p class="text-xs opacity-80 uppercase tracking-wider">Apresiasi Bulanan</p>
+                        <p class="text-xs opacity-80 uppercase tracking-wider">Apresiasi Periode</p>
                         <h3 class="text-lg font-bold">Top 10 Nasabah Terbaik</h3>
                     </div>
                 </div>
                 <span class="text-xs bg-amber-400 text-blue-900 font-bold px-3 py-1.5 rounded-lg shadow-sm animate-pulse">
-                    Auto-Reset
+                    Reset 2 Bulan
                 </span>
             </div>
         </div>
@@ -114,7 +113,7 @@
                                         </td>
                                         <td class="py-4 px-4 text-center">
                                             <span class="inline-flex items-center gap-1 font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full text-xs border border-blue-200">
-                                                {{ $rank->monthly_transaction_count }} Kali
+                                                {{ $rank->saving_days }} Kali
                                             </span>
                                         </td>
                                     </tr>
@@ -133,7 +132,7 @@
                                         </td>
                                         <td class="py-4 px-4 text-center">
                                             <span class="inline-flex items-center gap-1 font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded-full text-xs">
-                                                {{ $rank->monthly_transaction_count }} Kali
+                                                {{ $rank->saving_days }} Kali
                                             </span>
                                         </td>
                                     </tr>
@@ -166,7 +165,7 @@
                     </div>
                     <div class="text-right">
                         <span class="block text-xs font-bold text-blue-700">
-                            {{ $userTransactionCount }}x Transaksi
+                            {{ $userSavingDays }} Hari Menabung
                         </span>
                     </div>
                 </div>
@@ -178,19 +177,36 @@
                 <i class="ph ph-info text-blue-600 text-lg"></i> Aturan Pemeringkatan
             </h3>
             <ul class="space-y-2.5 text-xs text-gray-600">
-                <li class="flex items-start gap-2">
-                    <i class="ph ph-check-circle text-emerald-500 text-base shrink-0 mt-0.5"></i>
-                    <span>Dihitung dari <strong class="text-gray-900">frekuensi seringnya</strong> menabung, bukan dari besarnya saldo awal.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                    <i class="ph ph-check-circle text-emerald-500 text-base shrink-0 mt-0.5"></i>
-                    <span>Jika frekuensi seri, pemenang ditentukan berdasarkan <strong class="text-gray-900">total nominal tabungan bulanan terbanyak</strong>.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                    <i class="ph ph-check-circle text-emerald-500 text-base shrink-0 mt-0.5"></i>
-                    <span>Sistem akan mengosongkan (reset) statistik setiap <strong class="text-gray-900">awal bulan baru</strong>.</span>
-                </li>
-            </ul>
+
+    <li class="flex items-start gap-2">
+        <i class="ph ph-check-circle text-emerald-500 text-base shrink-0 mt-0.5"></i>
+        <span>
+            Ranking ditentukan berdasarkan <strong class="text-gray-900">jumlah hari menabung</strong> pada periode berjalan. Semakin banyak hari menabung, semakin tinggi peringkat.
+        </span>
+    </li>
+
+    <li class="flex items-start gap-2">
+        <i class="ph ph-check-circle text-emerald-500 text-base shrink-0 mt-0.5"></i>
+        <span>
+            Jika jumlah hari menabung sama, maka peringkat ditentukan berdasarkan <strong class="text-gray-900">saldo tabungan</strong>.
+        </span>
+    </li>
+
+    <li class="flex items-start gap-2">
+        <i class="ph ph-check-circle text-emerald-500 text-base shrink-0 mt-0.5"></i>
+        <span>
+            Ranking dihitung setiap <strong class="text-gray-900">periode 2 bulan</strong> (Agustus–September, Oktober–November, dan seterusnya).
+        </span>
+    </li>
+
+    <li class="flex items-start gap-2">
+        <i class="ph ph-check-circle text-emerald-500 text-base shrink-0 mt-0.5"></i>
+        <span>
+            Riwayat transaksi tetap tersimpan. Yang dihitung ulang hanyalah <strong class="text-gray-900">peringkat</strong> pada awal periode berikutnya.
+        </span>
+    </li>
+
+</ul>
         </div>
 
     </div>
