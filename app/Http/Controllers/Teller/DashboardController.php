@@ -15,7 +15,9 @@ class DashboardController extends Controller
         $teller = Auth::user(); // Ambil data teller yang sedang login
 
         // Hitung total saldo
-        $totalSaldo = Transaction::sum('amount');
+        $totalSaldo = User::where('role', 'user')
+                  ->where('is_active', true)
+                  ->sum('saldo');
 
         // Hitung saldo harian (transaksi hari ini)
         $dailySaldo = Transaction::whereDate('created_at', now()->toDateString())->sum('amount');
