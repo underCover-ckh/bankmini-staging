@@ -15,9 +15,7 @@ class DashboardController extends Controller
         $teller = Auth::user(); // Ambil data teller yang sedang login
 
         // Hitung total saldo
-        $totalSaldo = User::where('role', 'user')
-                  ->where('is_active', true)
-                  ->sum('saldo');
+        $totalSaldo = Transaction::sum('amount');
 
         // Hitung saldo harian (transaksi hari ini)
         $dailySaldo = Transaction::whereDate('created_at', now()->toDateString())->sum('amount');
@@ -32,21 +30,26 @@ class DashboardController extends Controller
     {
         // Ambil query pencarian dari input
         $search = $request->input('search');
+        
+        // Sorting parameters
+        $sortBy = $request->input('sort_by', 'name');
+        $sortOrder = $request->input('sort_order', 'asc');
 
-        // Ambil user dengan role 'user' dan filter jika ada pencarian
         $users = User::where('role', 'user')
             ->when($search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
+                return $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('username', 'like', "%{$search}%");
+                      ->orWhere('username', 'like', "%{$search}%")
+                      ->orWhere('nis', 'like', "%{$search}%")
+                      ->orWhere('kelas', 'like', "%{$search}%")
+                      ->orWhere('jurusan', 'like', "%{$search}%");
                 });
             })
-            ->paginate(10);
+            ->orderBy($sortBy, $sortOrder)
+            ->paginate(10)
+            ->appends($request->all());
 
-        // Kirim juga nilai search agar tetap muncul di input saat paginasi
-        $users->appends(['search' => $search]);
-
-        return view('teller.users', compact('users', 'search'));
+        return view('teller.users', compact('users', 'search', 'sortBy', 'sortOrder'));
     }
 
 }

@@ -44,15 +44,32 @@
         </div>
 
         <div>
-            <label for="jurusan" class="block text-sm font-medium mb-2">Jurusan</label>
-            <input type="text" id="jurusan" name="jurusan" value="{{ $user->jurusan }}" placeholder="Jurusan" 
-                class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label for="kelas" class="block text-sm font-medium mb-2">Kelas</label>
+                <select id="kelas" name="kelas"
+                    class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="">Pilih Kelas</option>
+                    <option value="x">X</option>
+                    <option value="xi">XI</option>
+                    <option value="xii">XII</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="jurusan" class="block text-sm font-medium mb-2">Jurusan</label>
+                <select id="jurusan" name="jurusan"
+                    class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="">Pilih Jurusan</option>
+                    <option value="tjkt1">TJKT 1</option>
+                    <option value="tjkt2">TJKT 2</option>
+                    <option value="pplg">PPLG</option>
+                    <option value="akl">AKL</option>
+                    <option value="acp">ACP</option>
+                </select>
+            </div>
         </div>
 
-        <div>
-            <label for="kelas" class="block text-sm font-medium mb-2">Kelas</label>
-            <input type="text" id="kelas" name="kelas" value="{{ $user->kelas }}" placeholder="Kelas" 
-                class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
 
         <!-- Tombol Simpan -->

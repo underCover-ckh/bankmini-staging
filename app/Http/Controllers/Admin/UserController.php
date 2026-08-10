@@ -13,19 +13,49 @@ class UserController extends Controller
      * Menampilkan daftar user.
      */
 public function index(Request $request) {
-        $search = $request->input('search');
+    $search = $request->input('search');
+    $filterName = $request->input('filter_name');
+    $filterUsername = $request->input('filter_username');
+    $filterNis = $request->input('filter_nis');
+    $filterKelas = $request->input('filter_kelas');
+    
+    // Sorting parameters
+    $sortBy = $request->input('sort_by', 'name'); // default sort by name
+    $sortOrder = $request->input('sort_order', 'asc'); // default ascending
 
-        $users = User::where('role', 'user')
-                     ->where(function ($query) use ($search) {
-                         $query->where('name', 'like', "%{$search}%")
-                               ->orWhere('username', 'like', "%{$search}%")
-                               ->orWhere('jurusan', 'like', "%{$search}%")
-                               ->orWhere('kelas', 'like', "%{$search}%");
-                     })
-                     ->paginate(10);
+    $users = User::where('role', 'user')
+        // Search utama
+        ->when($search, function ($query, $search) {
+            return $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('username', 'like', "%{$search}%")
+                  ->orWhere('jurusan', 'like', "%{$search}%")
+                  ->orWhere('kelas', 'like', "%{$search}%");
+            });
+        })
+        // Filter Nama
+        ->when($filterName, function ($query, $filterName) {
+            return $query->where('name', 'like', "%{$filterName}%");
+        })
+        // Filter Username
+        ->when($filterUsername, function ($query, $filterUsername) {
+            return $query->where('username', 'like', "%{$filterUsername}%");
+        })
+        // Filter NIS
+        ->when($filterNis, function ($query, $filterNis) {
+            return $query->where('nis', 'like', "%{$filterNis}%");
+        })
+        // Filter Kelas
+        ->when($filterKelas, function ($query, $filterKelas) {
+            return $query->where('kelas', $filterKelas);
+        })
+        // Apply sorting
+        ->orderBy($sortBy, $sortOrder)
+        ->paginate(10)
+        ->appends($request->all()); // Keep filter params in pagination
 
-        return view('admin.users.index', compact('users'));
-    }
+    return view('admin.users.index', compact('users', 'sortBy', 'sortOrder'));
+}
 
 
     /**

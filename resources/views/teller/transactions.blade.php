@@ -4,9 +4,9 @@
 <div class="p-4 sm:p-6 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-200">
     <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Riwayat Transaksi</h1>
 
-    <!-- Filter, Search, Export Bar -->
+    {{-- Filter, Search, Export --}}
     <div class="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 mb-6">
-        <!-- Filter Tanggal -->
+        {{-- Filter Tanggal --}}
         <form action="{{ route('teller.transactions') }}" method="GET" class="flex items-center gap-2 flex-wrap">
             <label for="date" class="text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Tanggal:</label>
             <input type="date" id="date" name="date" value="{{ request('date', now()->toDateString()) }}"
@@ -17,7 +17,7 @@
             </button>
         </form>
 
-        <!-- Search Form -->
+        {{-- Search --}}
         <form action="{{ route('teller.transactions') }}" method="GET" class="flex items-center gap-2 flex-1 max-w-md">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari username atau nama..."
                 class="flex-1 p-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
@@ -26,13 +26,13 @@
                 Cari
             </button>
             @if(request('search'))
-                <a href="{{ route('teller.transactions') }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 px-1">
+                <a href="{{ route('teller.transactions') }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
                     ✕
                 </a>
             @endif
         </form>
 
-        <!-- Export Form -->
+        {{-- Export --}}
         <form action="{{ route('teller.transactions.export') }}" method="GET" class="flex items-center gap-2 flex-wrap">
             <input type="date" id="export_date" name="date" value="{{ request('date', now()->toDateString()) }}"
                 class="p-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none">
@@ -46,7 +46,7 @@
         </form>
     </div>
 
-    <!-- Tabel Transaksi Container -->
+    {{-- Tabel Transaksi --}}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-200">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[900px]">
@@ -76,7 +76,8 @@
                             </td>
                             <td class="px-4 py-3 font-semibold text-right whitespace-nowrap 
                                 {{ $transaction->amount > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
-                                {{ $transaction->amount > 0 ? '+' : '-' }}Rp {{ number_format(abs($transaction->amount), 0, ',', '.') }}
+                                {{ $transaction->amount > 0 ? '+' : '-' }}Rp
+                                {{ number_format(abs($transaction->amount), 0, ',', '.') }}
                             </td>
                             <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-center whitespace-nowrap">
                                 {{ $transaction->created_at->format('d M Y') }}
@@ -104,6 +105,8 @@
             </table>
         </div>
     </div>
+
+    {{-- Pagination --}}
     @if($transactions->hasPages())
         <div class="mt-6">
             {{ $transactions->links('pagination::tailwind') }}
@@ -111,7 +114,7 @@
     @endif
 </div>
 
-<!-- Modal Konfirmasi Hapus -->
+{{-- Modal Konfirmasi Hapus --}}
 <div id="deleteModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden backdrop-blur-sm">
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md mx-4 shadow-xl border border-gray-100 dark:border-gray-700 transition-colors duration-200">
         <div class="flex items-center gap-3 mb-4">
@@ -158,7 +161,7 @@
     </div>
 </div>
 
-<!-- Script Modal -->
+{{-- Script --}}
 <script>
     function openDeleteModal(id, username, description, amount) {
         document.getElementById('modal-username').textContent = username;
@@ -174,7 +177,7 @@
         document.body.style.overflow = '';
     }
 
-    // Tutup modal dengan klik di luar modal
+    // Tutup modal dengan klik di luar
     document.getElementById('deleteModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeDeleteModal();
