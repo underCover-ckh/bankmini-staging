@@ -140,7 +140,7 @@
                                 {{ $rank->name }}
                             </p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                NIS: {{ $rank->nis }}
+                                {{ $rank->nis }}
                             </p>
                             <div class="mt-3 flex items-center justify-between gap-2">
                                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold text-xs border border-blue-100 dark:border-blue-900/50">

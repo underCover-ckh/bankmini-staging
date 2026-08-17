@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-200">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-100 dark:border-gray-700 transition-colors duration-200"> {{-- Hapus max-w agar full width --}}
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-100 dark:border-gray-700 transition-colors duration-200">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Form Debit</h1>
 
         @if (session('success'))
@@ -43,12 +43,6 @@
                        class="w-full p-3 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                        placeholder="Contoh: 1.000.000" autocomplete="off" inputmode="numeric" />
                 <input type="hidden" name="amount" id="amount">
-            </div>
-
-            <div>
-                <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Deskripsi</label>
-                <textarea id="description" name="description" rows="4" required 
-                          class="w-full p-3 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"></textarea>
             </div>
 
             <button type="submit" 

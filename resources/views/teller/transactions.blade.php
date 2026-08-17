@@ -8,6 +8,10 @@
     <div class="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 mb-6">
         {{-- Filter Tanggal --}}
         <form action="{{ route('teller.transactions') }}" method="GET" class="flex items-center gap-2 flex-wrap">
+            <input type="hidden" name="sort" value="{{ request('sort', 'created_at') }}">
+            <input type="hidden" name="direction" value="{{ request('direction', 'desc') }}">
+            <input type="hidden" name="search" value="{{ request('search') }}">
+
             <label for="date" class="text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Tanggal:</label>
             <input type="date" id="date" name="date" value="{{ request('date', now()->toDateString()) }}"
                 class="p-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
@@ -19,6 +23,10 @@
 
         {{-- Search --}}
         <form action="{{ route('teller.transactions') }}" method="GET" class="flex items-center gap-2 flex-1 max-w-md">
+            <input type="hidden" name="sort" value="{{ request('sort', 'created_at') }}">
+            <input type="hidden" name="direction" value="{{ request('direction', 'desc') }}">
+            <input type="hidden" name="date" value="{{ request('date') }}">
+
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari username atau nama..."
                 class="flex-1 p-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
             <button type="submit"
@@ -26,7 +34,7 @@
                 Cari
             </button>
             @if(request('search'))
-                <a href="{{ route('teller.transactions') }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                <a href="{{ route('teller.transactions', request()->except('search')) }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
                     ✕
                 </a>
             @endif
@@ -48,29 +56,93 @@
 
     {{-- Tabel Transaksi --}}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+        @php
+            $currentSort = request('sort', 'created_at'); // Default sort tanggal terbaru
+            $currentDirection = request('direction', 'desc');
+
+            $getSortUrl = function($column) use ($currentSort, $currentDirection) {
+                $newDirection = ($currentSort === $column && $currentDirection === 'asc') ? 'desc' : 'asc';
+                return route('teller.transactions', array_merge(request()->query(), [
+                    'sort' => $column,
+                    'direction' => $newDirection
+                ]));
+            };
+        @endphp
+
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[900px]">
                 <thead>
                     <tr class="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                        <th class="px-4 py-3 w-[12%]">Username</th>
-                        <th class="px-4 py-3 w-[18%]">Nama</th>
-                        <th class="px-4 py-3 w-[12%]">NIS</th>
-                        <th class="px-4 py-3 w-[22%]">Deskripsi</th>
-                        <th class="px-4 py-3 w-[14%] text-right">Jumlah</th>
-                        <th class="px-4 py-3 w-[12%] text-center">Tanggal</th>
+                        <th class="px-4 py-3 w-[12%]">
+                            <a href="{{ $getSortUrl('username') }}" class="flex items-center gap-1 hover:underline focus:outline-none">
+                                Username
+                                @if($currentSort === 'username')
+                                    <span>{{ $currentDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 w-[18%]">
+                            <a href="{{ $getSortUrl('name') }}" class="flex items-center gap-1 hover:underline focus:outline-none">
+                                Nama
+                                @if($currentSort === 'name')
+                                    <span>{{ $currentDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 w-[12%]">
+                            <a href="{{ $getSortUrl('nis') }}" class="flex items-center gap-1 hover:underline focus:outline-none">
+                                NIS
+                                @if($currentSort === 'nis')
+                                    <span>{{ $currentDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 w-[18%]">
+                            <a href="{{ $getSortUrl('kelas') }}" class="flex items-center gap-1 hover:underline focus:outline-none">
+                                Kelas
+                                @if($currentSort === 'kelas')
+                                    <span>{{ $currentDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 w-[22%]">
+                            <a href="{{ $getSortUrl('description') }}" class="flex items-center gap-1 hover:underline focus:outline-none">
+                                Deskripsi
+                                @if($currentSort === 'description')
+                                    <span>{{ $currentDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 w-[14%] text-right">
+                            <a href="{{ $getSortUrl('amount') }}" class="flex items-center justify-end gap-1 hover:underline focus:outline-none">
+                                Jumlah
+                                @if($currentSort === 'amount')
+                                    <span>{{ $currentDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 w-[12%] text-center">
+                            <a href="{{ $getSortUrl('created_at') }}" class="flex items-center justify-center gap-1 hover:underline focus:outline-none font-bold">
+                                Tanggal
+                                @if($currentSort === 'created_at')
+                                    <span>{{ $currentDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
                         <th class="px-4 py-3 w-[10%] text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-900 dark:text-gray-100">
                     @forelse ($transactions as $transaction)
                         <tr class="hover:bg-gray-100 dark:hover:bg-gray-700/50 transition duration-200">
-                            <td class="px-4 py-3 truncate max-w-[100px]" title="{{ $transaction->user->username }}">
-                                {{ $transaction->user->username }}
+                            <td class="px-4 py-3 truncate max-w-[100px]" title="{{ $transaction->user->username ?? '-' }}">
+                                {{ $transaction->user->username ?? '-' }}
                             </td>
-                            <td class="px-4 py-3 truncate max-w-[150px]" title="{{ $transaction->user->name }}">
-                                {{ $transaction->user->name }}
+                            <td class="px-4 py-3 truncate max-w-[150px] capitalize" title="{{ $transaction->user->name ?? '-' }}">
+                                {{ ucwords(strtolower($transaction->user->name ?? '-')) }}
                             </td>
-                            <td class="px-4 py-3 font-mono text-sm">{{ $transaction->user->nis }}</td>
+                            <td class="px-4 py-3 font-mono text-sm">{{ $transaction->user->nis ?? '-' }}</td>
+                            <td class="px-4 py-3 font-mono text-sm">{{ $transaction->user->kelas ?? '' }} {{ $transaction->user->jurusan ?? '' }}</td>
                             <td class="px-4 py-3 text-gray-600 dark:text-gray-300 break-words">
                                 {{ $transaction->description }}
                             </td>
@@ -85,14 +157,14 @@
                             <td class="px-4 py-3 text-center">
                                 <button
                                     class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg transition duration-300 text-sm font-medium"
-                                    onclick="openDeleteModal({{ $transaction->id }}, '{{ $transaction->user->username }}', '{{ $transaction->description }}', '{{ number_format(abs($transaction->amount), 0, ',', '.') }}')">
+                                    onclick="openDeleteModal({{ $transaction->id }}, '{{ $transaction->user->username ?? '' }}', '{{ $transaction->description }}', '{{ number_format(abs($transaction->amount), 0, ',', '.') }}')">
                                     Hapus
                                 </button>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center text-gray-500 dark:text-gray-400 py-12">
+                            <td colspan="8" class="text-center text-gray-500 dark:text-gray-400 py-12">
                                 <svg class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                 </svg>
@@ -109,7 +181,7 @@
     {{-- Pagination --}}
     @if($transactions->hasPages())
         <div class="mt-6">
-            {{ $transactions->links('pagination::tailwind') }}
+            {{ $transactions->appends(request()->query())->links('pagination::tailwind') }}
         </div>
     @endif
 </div>
@@ -177,14 +249,12 @@
         document.body.style.overflow = '';
     }
 
-    // Tutup modal dengan klik di luar
     document.getElementById('deleteModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeDeleteModal();
         }
     });
 
-    // Tutup modal dengan tombol ESC
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeDeleteModal();

@@ -7,6 +7,10 @@
     <!-- Form Pencarian -->
     <div class="mb-6">
         <form action="{{ route('teller.users') }}" method="GET" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <!-- Simpan nilai sort saat mencari agar filter tidak hilang -->
+            <input type="hidden" name="sort" value="{{ request('sort', 'name') }}">
+            <input type="hidden" name="direction" value="{{ request('direction', 'asc') }}">
+
             <div class="flex flex-1 max-w-full sm:max-w-md">
                 <input 
                     type="text" 
@@ -24,7 +28,7 @@
             </div>
             @if($search)
                 <a 
-                    href="{{ route('teller.users') }}" 
+                    href="{{ route('teller.users', ['sort' => request('sort', 'name'), 'direction' => request('direction', 'asc')]) }}" 
                     class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition duration-300 text-center px-3 py-1"
                 >
                     ✕ Reset
@@ -33,18 +37,68 @@
         </form>
     </div>
 
-    <!-- Tabel Desktop -->
+    <!-- Tabel Desktop & Mobile Container -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-200">
         
+        @php
+            $currentSort = request('sort', 'name'); // Default sort berdasarkan nama
+            $currentDirection = request('direction', 'asc'); // Default urutan A-Z (asc)
+
+            // Helper untuk membuat URL sorting
+            $getSortUrl = function($column) use ($currentSort, $currentDirection) {
+                $newDirection = ($currentSort === $column && $currentDirection === 'asc') ? 'desc' : 'asc';
+                return route('teller.users', array_merge(request()->query(), [
+                    'sort' => $column,
+                    'direction' => $newDirection
+                ]));
+            };
+        @endphp
+
         <!-- Tabel Desktop -->
         <div class="hidden md:block overflow-x-auto">
-            <table class="w-full text-left border-collapse min-w-[650px]">
+            <table class="w-full text-left border-collapse min-w-[750px]">
                 <thead>
                     <tr class="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                        <th class="px-4 py-3 w-[15%]">Username</th>
-                        <th class="px-4 py-3 w-[20%]">NIS</th>
-                        <th class="px-4 py-3 w-[40%]">Nama</th>
-                        <th class="px-4 py-3 w-[25%] text-right">Saldo</th>
+                        <th class="px-4 py-3 w-[15%]">
+                            <a href="{{ $getSortUrl('username') }}" class="flex items-center gap-1 hover:underline focus:outline-none">
+                                Username
+                                @if($currentSort === 'username')
+                                    <span>{{ $currentDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 w-[15%]">
+                            <a href="{{ $getSortUrl('nis') }}" class="flex items-center gap-1 hover:underline focus:outline-none">
+                                NIS
+                                @if($currentSort === 'nis')
+                                    <span>{{ $currentDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 w-[30%]">
+                            <a href="{{ $getSortUrl('name') }}" class="flex items-center gap-1 hover:underline focus:outline-none font-bold">
+                                Nama
+                                @if($currentSort === 'name')
+                                    <span>{{ $currentDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 w-[15%]">
+                            <a href="{{ $getSortUrl('kelas') }}" class="flex items-center gap-1 hover:underline focus:outline-none">
+                                Kelas
+                                @if($currentSort === 'kelas')
+                                    <span>{{ $currentDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 w-[25%] text-right">
+                            <a href="{{ $getSortUrl('saldo') }}" class="flex items-center justify-end gap-1 hover:underline focus:outline-none">
+                                Saldo
+                                @if($currentSort === 'saldo')
+                                    <span>{{ $currentDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-900 dark:text-gray-100">
@@ -55,7 +109,10 @@
                             </td>
                             <td class="px-4 py-3 font-mono text-sm">{{ $user->nis }}</td>
                             <td class="px-4 py-3 text-gray-700 dark:text-gray-300 break-words" title="{{ $user->name }}">
-                                {{ $user->name }}
+                                {{ ucwords(strtolower($user->name)) }}
+                            </td>
+                            <td class="px-4 py-3 font-mono text-sm text-gray-600 dark:text-gray-300">
+                                {{ strtoupper($user->kelas) }} {{ strtoupper($user->jurusan) }}
                             </td>
                             <td class="px-4 py-3 font-semibold text-green-600 dark:text-green-400 text-right whitespace-nowrap">
                                 Rp {{ number_format($user->saldo, 0, ',', '.') }}
@@ -63,7 +120,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center text-gray-500 dark:text-gray-400 py-8">
+                            <td colspan="5" class="text-center text-gray-500 dark:text-gray-400 py-8">
                                 @if($search)
                                     <div class="flex flex-col items-center gap-2">
                                         <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,14 +150,16 @@
                     <div class="flex justify-between items-start">
                         <div class="flex-1 min-w-0">
                             <p class="font-semibold text-gray-900 dark:text-white truncate" title="{{ $user->name }}">
-                                {{ $user->name }}
+                                {{ ucwords(strtolower($user->name)) }}
                             </p>
                             <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
                                 @ {{ $user->username }}
                             </p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 font-mono">
-                                NIS: {{ $user->nis }}
-                            </p>
+                            <div class="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-xs text-gray-500 dark:text-gray-400 font-mono">
+                                <span>NIS: {{ $user->nis }}</span>
+                                <span>•</span>
+                                <span>Kelas: {{ strtoupper($user->kelas) }} {{ strtoupper($user->jurusan) }}</span>
+                            </div>
                         </div>
                         <div class="ml-3 flex-shrink-0">
                             <p class="font-semibold text-green-600 dark:text-green-400 whitespace-nowrap">
@@ -124,7 +183,7 @@
     <!-- Pagination -->
     @if($users->hasPages())
         <div class="mt-6">
-            {{ $users->links('pagination::tailwind') }}
+            {{ $users->appends(request()->query())->links('pagination::tailwind') }}
         </div>
     @endif
 </div>

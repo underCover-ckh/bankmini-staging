@@ -25,7 +25,6 @@
             <tr>
                 <th class="px-4 py-3 font-semibold">Nama</th>
                 <th class="px-4 py-3 font-semibold">Username</th>
-                <th class="px-4 py-3 font-semibold">Jurusan</th>
                 <th class="px-4 py-3 font-semibold">Kelas</th>
                 <th class="px-4 py-3 font-semibold">Role</th>
                 <th class="px-4 py-3 font-semibold">Aksi</th>
@@ -34,10 +33,9 @@
         <tbody>
             @forelse ($tellers as $teller)
             <tr class="bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 transition">
-                <td class="px-4 py-3">{{ $teller->name }}</td>
+                <td class="px-4 py-3 capitalize">{{ $teller->name }}</td>
                 <td class="px-4 py-3">{{ $teller->username }}</td>
-                <td class="px-4 py-3">{{ $teller->jurusan }}</td>
-                <td class="px-4 py-3">{{ $teller->kelas }}</td>
+                <td class="px-4 py-3">{{ $teller->kelas }} {{ $teller->jurusan }}</td>
                 <td class="px-4 py-3">
                     <span class="px-3 py-1 text-xs font-semibold text-white bg-blue-500 rounded-full">
                         {{ ucfirst($teller->role) }}

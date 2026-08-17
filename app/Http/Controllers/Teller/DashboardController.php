@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Teller;
 
 use App\Http\Controllers\Controller;
@@ -7,33 +8,39 @@ use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-
 class DashboardController extends Controller
 {
     public function index()
     {
         $teller = Auth::user(); // Ambil data teller yang sedang login
 
-        // Hitung total saldo
-        $totalSaldo = Transaction::sum('amount');
+        // Hitung total saldo dari seluruh akun siswa/user
+        $totalSaldo = User::where('role', 'user')->sum('saldo');
 
-        // Hitung saldo harian (transaksi hari ini)
-        $dailySaldo = Transaction::whereDate('created_at', now()->toDateString())->sum('amount');
+        // Hitung saldo/mutasi harian (transaksi hari ini)
+        $dailySaldo = Transaction::whereDate('created_at', today())->sum('amount');
 
-        // Ambil 5 riwayat transaksi terakhir
-        $transactions = Transaction::orderBy('created_at', 'desc')->take(5)->get();
+        // Ambil 5 riwayat transaksi terakhir + eager load relasi user (Mencegah N+1 Query)
+        $transactions = Transaction::with('user')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
 
         return view('teller.dashboard', compact('teller', 'totalSaldo', 'dailySaldo', 'transactions'));
     }
 
     public function users(Request $request)
     {
-        // Ambil query pencarian dari input
         $search = $request->input('search');
         
-        // Sorting parameters
-        $sortBy = $request->input('sort_by', 'name');
-        $sortOrder = $request->input('sort_order', 'asc');
+        $sortBy = $request->input('sort', 'name'); 
+        $sortOrder = strtolower($request->input('direction', 'asc')) === 'desc' ? 'desc' : 'asc';
+
+        // Validasi kolom sorting yang diizinkan
+        $allowedSorts = ['username', 'nis', 'name', 'kelas', 'saldo'];
+        if (!in_array($sortBy, $allowedSorts)) {
+            $sortBy = 'name';
+        }
 
         $users = User::where('role', 'user')
             ->when($search, function ($query, $search) {
@@ -51,5 +58,4 @@ class DashboardController extends Controller
 
         return view('teller.users', compact('users', 'search', 'sortBy', 'sortOrder'));
     }
-
 }

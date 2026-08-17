@@ -24,7 +24,7 @@ class TransactionController extends Controller
             'username' => 'required|exists:users,username',
             'nis' => 'required|exists:users,nis',
             'amount' => 'required|numeric|min:1',
-            'description' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
         ]);
 
         $user = User::where('username', $request->username)
@@ -39,7 +39,7 @@ class TransactionController extends Controller
         Transaction::create([
             'user_id' => $user->id,
             'teller_id' => auth()->id(), // ID teller yang sedang login
-            'description' => $request->description,
+            'description' => $request->description ?? 'Transaksi Debit',
             'amount' => $request->amount,
         ]);
 
@@ -88,34 +88,56 @@ class TransactionController extends Controller
     // Halaman Riwayat Transaksi
 // Halaman Riwayat Transaksi
     public function index(Request $request)
-    {
-        // Mendapatkan parameter dari request
-        $date = $request->input('date');
-        $searchTerm = $request->input('search');
+{
+    // Mendapatkan parameter dari request
+    $date = $request->input('date');
+    $searchTerm = $request->input('search');
+    
+    // Parameter sorting (default: tanggal terbaru)
+    $sort = $request->input('sort', 'created_at');
+    $direction = strtolower($request->input('direction', 'desc')) === 'asc' ? 'asc' : 'desc';
 
-        // Mulai dengan query dasar untuk transaksi
-        $query = Transaction::with('user')
-            ->orderBy('created_at', 'desc');
+    // Query dasar dengan JOIN ke tabel users agar bisa sorting kolom milik user
+    $query = Transaction::query()
+        ->select('transactions.*')
+        ->join('users', 'transactions.user_id', '=', 'users.id');
 
-        // Filter berdasarkan tanggal jika ada
-        if ($date) {
-            $query->whereDate('created_at', $date);
-        }
-
-        // Pencarian berdasarkan username atau nis jika ada
-        if ($searchTerm) {
-            $query->whereHas('user', function ($q) use ($searchTerm) {
-                $q->where('username', 'like', '%' . $searchTerm . '%')
-                    ->orWhere('nis', 'like', '%' . $searchTerm . '%')
-                    ->orWhere('name', 'like', '%' . $searchTerm . '%');
-            });
-        }
-
-        // Ambil transaksi dengan pagination
-        $transactions = $query->paginate(10);
-
-        return view('teller.transactions', compact('transactions'));
+    // Filter berdasarkan tanggal jika ada
+    if ($date) {
+        $query->whereDate('transactions.created_at', $date);
     }
+
+    // Pencarian berdasarkan username, nis, nama, atau deskripsi transaksi
+    if ($searchTerm) {
+        $query->where(function ($q) use ($searchTerm) {
+            $q->where('users.username', 'like', '%' . $searchTerm . '%')
+              ->orWhere('users.nis', 'like', '%' . $searchTerm . '%')
+              ->orWhere('users.name', 'like', '%' . $searchTerm . '%')
+              ->orWhere('transactions.description', 'like', '%' . $searchTerm . '%');
+        });
+    }
+
+    // Pemetaan kolom sorting untuk mencegah SQL Injection
+    $sortColumns = [
+        'username'    => 'users.username',
+        'name'        => 'users.name',
+        'nis'         => 'users.nis',
+        'kelas'       => 'users.kelas',
+        'description' => 'transactions.description',
+        'amount'      => 'transactions.amount',
+        'created_at'  => 'transactions.created_at',
+    ];
+
+    $orderBy = $sortColumns[$sort] ?? 'transactions.created_at';
+
+    // Ambil transaksi dengan pagination & bawa relasi user
+    $transactions = $query->with('user')
+        ->orderBy($orderBy, $direction)
+        ->paginate(10)
+        ->appends($request->all());
+
+    return view('teller.transactions', compact('transactions'));
+}
 
 
 

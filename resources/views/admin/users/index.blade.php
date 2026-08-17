@@ -115,10 +115,10 @@
             <tbody>
                 @forelse ($users as $user)
                     <tr class="bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 transition">
-                        <td class="px-4 py-3">{{ $user->name }}</td>
+                        <td class="px-4 py-3">{{ strtoupper($user->name) }}</td>
                         <td class="px-4 py-3">{{ $user->username }}</td>
                         <td class="px-4 py-3">{{ $user->nis }}</td>
-                        <td class="px-4 py-3">{{ $user->kelas }} {{ $user->jurusan }}</td>
+                        <td class="px-4 py-3">{{ strtoupper($user->kelas) }} {{ strtoupper($user->jurusan) }}</td>
                         <td class="px-4 py-3 text-green-600 font-semibold">Rp{{ number_format($user->saldo, 2) }}</td>
                         <td class="px-4 py-3">
                             <span class="px-3 py-1 text-xs font-semibold text-white bg-blue-500 rounded-full">
