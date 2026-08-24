@@ -30,7 +30,8 @@ public function index(Request $request) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('username', 'like', "%{$search}%")
                   ->orWhere('jurusan', 'like', "%{$search}%")
-                  ->orWhere('kelas', 'like', "%{$search}%");
+                  ->orWhere('kelas', 'like', "%{$search}%")
+                  ->orWhere('nis', 'like', "%{$search}%");
             });
         })
         // Filter Nama

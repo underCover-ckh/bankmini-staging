@@ -7,7 +7,6 @@
     <!-- Form Pencarian -->
     <div class="mb-6">
         <form action="{{ route('teller.users') }}" method="GET" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-            <!-- Simpan nilai sort saat mencari agar filter tidak hilang -->
             <input type="hidden" name="sort" value="{{ request('sort', 'name') }}">
             <input type="hidden" name="direction" value="{{ request('direction', 'asc') }}">
 
@@ -41,10 +40,9 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-200">
         
         @php
-            $currentSort = request('sort', 'name'); // Default sort berdasarkan nama
-            $currentDirection = request('direction', 'asc'); // Default urutan A-Z (asc)
+            $currentSort = request('sort', 'name');
+            $currentDirection = request('direction', 'asc');
 
-            // Helper untuk membuat URL sorting
             $getSortUrl = function($column) use ($currentSort, $currentDirection) {
                 $newDirection = ($currentSort === $column && $currentDirection === 'asc') ? 'desc' : 'asc';
                 return route('teller.users', array_merge(request()->query(), [
@@ -52,6 +50,13 @@
                     'direction' => $newDirection
                 ]));
             };
+
+            // Mapping Angka ke Romawi
+            $romawi = [
+                '10' => 'X',
+                '11' => 'XI',
+                '12' => 'XII',
+            ];
         @endphp
 
         <!-- Tabel Desktop -->
@@ -112,7 +117,7 @@
                                 {{ ucwords(strtolower($user->name)) }}
                             </td>
                             <td class="px-4 py-3 font-mono text-sm text-gray-600 dark:text-gray-300">
-                                {{ strtoupper($user->kelas) }} {{ strtoupper($user->jurusan) }}
+                                {{ $romawi[$user->kelas] ?? strtoupper($user->kelas) }} {{ strtoupper($user->jurusan) }}
                             </td>
                             <td class="px-4 py-3 font-semibold text-green-600 dark:text-green-400 text-right whitespace-nowrap">
                                 Rp {{ number_format($user->saldo, 0, ',', '.') }}
@@ -158,7 +163,7 @@
                             <div class="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-xs text-gray-500 dark:text-gray-400 font-mono">
                                 <span>NIS: {{ $user->nis }}</span>
                                 <span>•</span>
-                                <span>Kelas: {{ strtoupper($user->kelas) }} {{ strtoupper($user->jurusan) }}</span>
+                                <span>Kelas: {{ $romawi[$user->kelas] ?? strtoupper($user->kelas) }} {{ strtoupper($user->jurusan) }}</span>
                             </div>
                         </div>
                         <div class="ml-3 flex-shrink-0">
