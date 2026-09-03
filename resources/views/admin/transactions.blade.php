@@ -4,18 +4,35 @@
 <div class="p-6 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 rounded-lg shadow-lg">
     <h1 class="text-2xl font-bold text-blue-600 mb-6">Riwayat Transaksi Teller</h1>
 
-    <!-- Search Form (Lebar Penuh di Atas) -->
+    <!-- Search Form (Lebar Penuh di Atas) - TASK 6: Nama, Username, NIS, Kelas -->
 <form action="{{ route('admin.transactions') }}" method="GET" class="mb-6">
-    <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pencarian:</label>
+    <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pencarian (Nama, Username, NIS, Kelas):</label>
     <div class="flex">
         <input type="text" id="search" name="search" value="{{ request('search') }}"
-            placeholder="Cari nama, username, kelas, jurusan"
-            class="flex-1 px-4 py-2 rounded-l-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-r-lg shadow hover:bg-blue-700 transition">
+            placeholder="Cari berdasarkan Nama, Username, NIS, Kelas..."
+            class="flex-1 px-4 py-2 rounded-l-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white">
+        {{-- Preserve tanggal saat searching --}}
+        @if(request('date'))
+            <input type="hidden" name="date" value="{{ request('date') }}">
+        @endif
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white shadow hover:bg-blue-700 transition">
             Cari
         </button>
-        
+        @if(request('search') || request('date'))
+            <a href="{{ route('admin.transactions') }}" class="px-4 py-2 bg-gray-500 text-white rounded-r-lg shadow hover:bg-gray-600 transition flex items-center">
+                Reset
+            </a>
+        @else
+            <span class="px-2 bg-blue-600 rounded-r-lg"></span>
+        @endif
     </div>
+    @if(request('search'))
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            Menampilkan hasil pencarian untuk: <span class="font-semibold text-blue-600">"{{ request('search') }}"</span>
+            @if(request('date')) pada tanggal <span class="font-semibold">{{ request('date') }}</span> @endif
+            - {{ $transactions->total() }} data ditemukan
+        </p>
+    @endif
 </form>
 
 <!-- Filter Tanggal dan Export (Dibawah Search) -->
@@ -23,11 +40,20 @@
     <!-- Filter Form -->
     <form action="{{ route('admin.transactions') }}" method="GET" class="flex items-center space-x-2">
         <label for="date" class="text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal:</label>
-        <input type="date" id="date" name="date" value="{{ request('date', now()->toDateString()) }}" 
-            class="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <input type="date" id="date" name="date" value="{{ request('date') }}" 
+            class="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white">
+        {{-- Preserve search saat filter tanggal --}}
+        @if(request('search'))
+            <input type="hidden" name="search" value="{{ request('search') }}">
+        @endif
         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
             Filter
         </button>
+        @if(request('date'))
+            <a href="{{ route('admin.transactions', request()->except('date')) }}" class="px-3 py-2 bg-gray-500 text-white rounded-lg shadow hover:bg-gray-600 transition text-sm">
+                Reset Tanggal
+            </a>
+        @endif
     </form>
 
     <!-- Export Form -->
@@ -50,6 +76,7 @@
                     <th class="px-6 py-3 font-semibold">Nama</th>
                     <th class="px-6 py-3 font-semibold">Username</th>
                     <th class="px-6 py-3 font-semibold">NIS</th>
+                    <th class="px-6 py-3 font-semibold">Kelas</th>
                     <th class="px-6 py-3 font-semibold">Deskripsi</th>
                     <th class="px-6 py-3 font-semibold">Jumlah</th>
                     <th class="px-6 py-3 font-semibold">Tanggal</th>
@@ -62,6 +89,7 @@
                     <td class="px-6 py-4">{{ $transaction->user->name ?? 'N/A' }}</td>
                     <td class="px-6 py-4">{{ $transaction->user->username ?? 'N/A' }}</td>
                     <td class="px-6 py-4">{{ $transaction->user->nis ?? 'N/A' }}</td>
+                    <td class="px-6 py-4">{{ trim(strtoupper($transaction->user->kelas ?? '') . ' ' . strtoupper($transaction->user->jurusan ?? '')) ?: 'N/A' }}</td>
                     <td class="px-6 py-4">{{ $transaction->description }}</td>
                     <td class="px-6 py-4 font-semibold {{ $transaction->amount > 0 ? 'text-green-500' : 'text-red-500' }}">
                         {{ $transaction->amount > 0 ? '+' : '-' }}Rp {{ number_format(abs($transaction->amount), 0, ',', '.') }}
@@ -70,16 +98,28 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="text-center text-gray-500 py-4">Belum ada transaksi.</td>
+                    <td colspan="8" class="text-center text-gray-500 py-8">
+                        @if(request('search'))
+                            <div class="flex flex-col items-center gap-2">
+                                <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                                <span>Tidak ditemukan transaksi dengan kata kunci "<strong class="text-blue-600">{{ request('search') }}</strong>"</span>
+                                @if(request('date'))<span class="text-sm">pada tanggal {{ request('date') }}</span>@endif
+                            </div>
+                        @else
+                            Belum ada transaksi.
+                        @endif
+                    </td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 
-    <!-- Pagination -->
+    <!-- Pagination - preserve query string -->
     <div class="mt-6 flex justify-center">
-        {{ $transactions->links('pagination::tailwind') }}
+        {{ $transactions->appends(request()->query())->links('pagination::tailwind') }}
     </div>
 </div>
 @endsection

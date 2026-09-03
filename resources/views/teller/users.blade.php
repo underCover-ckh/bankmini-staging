@@ -14,7 +14,7 @@
                 <input 
                     type="text" 
                     name="search" 
-                    placeholder="Cari berdasarkan nama atau username..." 
+                    placeholder="Cari berdasarkan Username, NIS, Nama, Kelas..." 
                     value="{{ $search ?? '' }}"
                     class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent flex-1 min-w-0"
                 >
@@ -34,6 +34,12 @@
                 </a>
             @endif
         </form>
+        @if($search)
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-3">
+                Menampilkan hasil pencarian untuk: <span class="font-semibold text-blue-600">"{{ $search }}"</span>
+                - {{ $users->total() }} data ditemukan
+            </p>
+        @endif
     </div>
 
     <!-- Tabel Desktop & Mobile Container -->

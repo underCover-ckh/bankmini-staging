@@ -19,19 +19,25 @@ public function index(Request $request) {
     $filterNis = $request->input('filter_nis');
     $filterKelas = $request->input('filter_kelas');
     
-    // Sorting parameters
-    $sortBy = $request->input('sort_by', 'name'); // default sort by name
-    $sortOrder = $request->input('sort_order', 'asc'); // default ascending
+    // Sorting parameters - whitelist untuk keamanan
+    $allowedSorts = ['name', 'username', 'nis', 'kelas', 'jurusan', 'saldo', 'created_at'];
+    $sortBy = $request->input('sort_by', 'name');
+    if (!in_array($sortBy, $allowedSorts)) {
+        $sortBy = 'name';
+    }
+    $sortOrder = strtolower($request->input('sort_order', 'asc')) === 'desc' ? 'desc' : 'asc';
 
     $users = User::where('role', 'user')
-        // Search utama
+        // Search utama - TASK 6: Nama, Username, NIS, Kelas (Kelas = gabungan kelas + jurusan, cth: "X AKL")
         ->when($search, function ($query, $search) {
             return $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('username', 'like', "%{$search}%")
                   ->orWhere('jurusan', 'like', "%{$search}%")
                   ->orWhere('kelas', 'like', "%{$search}%")
-                  ->orWhere('nis', 'like', "%{$search}%");
+                  ->orWhere('nis', 'like', "%{$search}%")
+                  ->orWhereRaw("CONCAT(kelas, ' ', jurusan) LIKE ?", ["%{$search}%"])
+                  ->orWhereRaw("CONCAT(kelas, jurusan) LIKE ?", ["%{$search}%"]);
             });
         })
         // Filter Nama
@@ -46,9 +52,9 @@ public function index(Request $request) {
         ->when($filterNis, function ($query, $filterNis) {
             return $query->where('nis', 'like', "%{$filterNis}%");
         })
-        // Filter Kelas
+        // Filter Kelas - gunakan LIKE agar konsisten dengan search (TASK 6: search by Kelas)
         ->when($filterKelas, function ($query, $filterKelas) {
-            return $query->where('kelas', $filterKelas);
+            return $query->where('kelas', 'like', "%{$filterKelas}%");
         })
         // Apply sorting
         ->orderBy($sortBy, $sortOrder)

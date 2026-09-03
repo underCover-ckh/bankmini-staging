@@ -19,18 +19,22 @@ public function index(Request $request)
 
     if ($request->filled('search')) {
         $search = $request->search;
-        $query->whereHas('user', function ($q) use ($search) {
-            $q->where('username', 'like', "%{$search}%")
-              ->orWhere('nis', 'like', "%{$search}%")
-              ->orWhere('kelas', 'like', "%{$search}%")
-              ->orWhere('jurusan', 'like', "%{$search}%")
-              ->orWhere('name', 'like', "%{$search}%");  // nama user
-        })->orWhereHas('teller', function ($q) use ($search) {
-            $q->where('name', 'like', "%{$search}%");  // nama teller
-        })->orWhere('description', 'like', "%{$search}%");
+        $query->where(function ($q) use ($search) {
+            $q->whereHas('user', function ($qq) use ($search) {
+                $qq->where('username', 'like', "%{$search}%")
+                  ->orWhere('nis', 'like', "%{$search}%")
+                  ->orWhere('kelas', 'like', "%{$search}%")
+                  ->orWhere('jurusan', 'like', "%{$search}%")
+                  ->orWhere('name', 'like', "%{$search}%")  // nama user
+                  ->orWhereRaw("CONCAT(kelas, ' ', jurusan) LIKE ?", ["%{$search}%"])
+                  ->orWhereRaw("CONCAT(kelas, jurusan) LIKE ?", ["%{$search}%"]);
+            })->orWhereHas('teller', function ($qq) use ($search) {
+                $qq->where('name', 'like', "%{$search}%");  // nama teller
+            })->orWhere('description', 'like', "%{$search}%");
+        });
     }
 
-    $transactions = $query->latest()->paginate(10);
+    $transactions = $query->latest()->paginate(10)->appends($request->query());
 
     return view('admin.transactions', compact('transactions'));
 }

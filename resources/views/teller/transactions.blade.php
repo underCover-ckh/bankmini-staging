@@ -27,7 +27,7 @@
             <input type="hidden" name="direction" value="{{ request('direction', 'desc') }}">
             <input type="hidden" name="date" value="{{ request('date') }}">
 
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari username atau nama..."
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Username, Nama, NIS, Kelas..."
                 class="flex-1 p-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
             <button type="submit"
                 class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
@@ -53,6 +53,15 @@
             </button>
         </form>
     </div>
+
+    {{-- Info hasil pencarian TASK 6 --}}
+    @if(request('search'))
+        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            Menampilkan hasil pencarian untuk: <span class="font-semibold text-blue-600">"{{ request('search') }}"</span>
+            - {{ $transactions->total() }} data ditemukan
+            @if(request('date')) pada tanggal {{ request('date') }} @endif
+        </div>
+    @endif
 
     {{-- Tabel Transaksi --}}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-200">
@@ -168,8 +177,13 @@
                                 <svg class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                 </svg>
-                                <p class="mt-3 font-medium">Belum ada transaksi.</p>
-                                <p class="text-sm mt-1 text-gray-400 dark:text-gray-500">Belum ada transaksi yang tercatat.</p>
+                                @if(request('search'))
+                                    <p class="mt-3 font-medium">Tidak ditemukan transaksi dengan kata kunci "<strong class="text-blue-600">{{ request('search') }}</strong>"</p>
+                                    <p class="text-sm mt-1 text-gray-400 dark:text-gray-500">Coba gunakan kata kunci lain (Username, Nama, NIS, Kelas)</p>
+                                @else
+                                    <p class="mt-3 font-medium">Belum ada transaksi.</p>
+                                    <p class="text-sm mt-1 text-gray-400 dark:text-gray-500">Belum ada transaksi yang tercatat.</p>
+                                @endif
                             </td>
                         </tr>
                     @endforelse

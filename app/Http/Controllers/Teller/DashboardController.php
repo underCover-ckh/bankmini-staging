@@ -49,7 +49,9 @@ class DashboardController extends Controller
                       ->orWhere('username', 'like', "%{$search}%")
                       ->orWhere('nis', 'like', "%{$search}%")
                       ->orWhere('kelas', 'like', "%{$search}%")
-                      ->orWhere('jurusan', 'like', "%{$search}%");
+                      ->orWhere('jurusan', 'like', "%{$search}%")
+                      ->orWhereRaw("CONCAT(kelas, ' ', jurusan) LIKE ?", ["%{$search}%"])
+                      ->orWhereRaw("CONCAT(kelas, jurusan) LIKE ?", ["%{$search}%"]);
                 });
             })
             ->orderBy($sortBy, $sortOrder)

@@ -107,12 +107,16 @@ class TransactionController extends Controller
         $query->whereDate('transactions.created_at', $date);
     }
 
-    // Pencarian berdasarkan username, nis, nama, atau deskripsi transaksi
+    // Pencarian berdasarkan Username, Nama, NIS, Kelas (sesuai TASK 6) - Kelas = gabungan kelas + jurusan (cth: "X AKL")
     if ($searchTerm) {
         $query->where(function ($q) use ($searchTerm) {
             $q->where('users.username', 'like', '%' . $searchTerm . '%')
               ->orWhere('users.nis', 'like', '%' . $searchTerm . '%')
               ->orWhere('users.name', 'like', '%' . $searchTerm . '%')
+              ->orWhere('users.kelas', 'like', '%' . $searchTerm . '%')
+              ->orWhere('users.jurusan', 'like', '%' . $searchTerm . '%')
+              ->orWhereRaw("CONCAT(users.kelas, ' ', users.jurusan) LIKE ?", ["%{$searchTerm}%"])
+              ->orWhereRaw("CONCAT(users.kelas, users.jurusan) LIKE ?", ["%{$searchTerm}%"])
               ->orWhere('transactions.description', 'like', '%' . $searchTerm . '%');
         });
     }

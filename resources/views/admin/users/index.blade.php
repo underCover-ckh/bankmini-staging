@@ -13,9 +13,9 @@
     <!-- Form Pencarian & Filter -->
     <div class="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
         <form action="{{ route('admin.users.index') }}" method="GET" class="space-y-4">
-            <!-- Search Bar -->
+            <!-- Search Bar - TASK 6: Nama, Username, NIS, Kelas -->
             <div class="flex flex-wrap items-center gap-2">
-                <input type="text" name="search" placeholder="Cari berdasarkan nama atau username..." value="{{ request('search') }}"
+                <input type="text" name="search" placeholder="Cari berdasarkan Nama, Username, NIS, Kelas..." value="{{ request('search') }}"
                     class="flex-1 min-w-[200px] px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
                     <i class="fas fa-search mr-1"></i> Cari
@@ -24,6 +24,12 @@
                     <i class="fas fa-undo mr-1"></i> Reset
                 </a>
             </div>
+            @if(request('search'))
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                    Menampilkan hasil pencarian untuk: <span class="font-semibold text-blue-600">"{{ request('search') }}"</span>
+                    - {{ $users->total() }} data ditemukan
+                </p>
+            @endif
 
         </form>
     </div>
