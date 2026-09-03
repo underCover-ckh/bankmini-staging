@@ -93,7 +93,7 @@
                             <tr class="bg-gray-50 border-b border-gray-100 text-gray-500 text-[11px] font-bold uppercase tracking-wider">
                                 <th class="py-4 px-4 w-16 text-center">Rank</th>
                                 <th class="py-4 px-4">Nasabah</th>
-                                <th class="py-4 px-4 text-center">Frekuensi</th>
+                                <th class="py-4 px-4 text-center">Hari Menabung</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 text-sm">
@@ -113,7 +113,7 @@
                                         </td>
                                         <td class="py-4 px-4 text-center">
                                             <span class="inline-flex items-center gap-1 font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full text-xs border border-blue-200">
-                                                {{ $rank->saving_days }} Kali
+                                                {{ $rank->saving_days }} Hari
                                             </span>
                                         </td>
                                     </tr>
@@ -132,7 +132,7 @@
                                         </td>
                                         <td class="py-4 px-4 text-center">
                                             <span class="inline-flex items-center gap-1 font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded-full text-xs">
-                                                {{ $rank->saving_days }} Kali
+                                                {{ $rank->saving_days }} Hari
                                             </span>
                                         </td>
                                     </tr>

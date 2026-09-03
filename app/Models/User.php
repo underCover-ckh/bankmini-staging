@@ -120,10 +120,9 @@ public static function getCurrentRankingPeriod(): array
 /**
  * Ranking Menabung Periode 2 Bulanan
  *
- * Urutan Ranking:
+ * Urutan Ranking (revisi):
  * 1. Jumlah hari menabung (konsistensi)
- * 2. Jumlah transaksi
- * 3. Saldo tabungan
+ * 2. Jika hari sama -> Saldo tabungan
  */
 public static function monthlySavingsRanking(int $limit = 10)
 {
@@ -164,7 +163,6 @@ public static function monthlySavingsRanking(int $limit = 10)
         })
 
         ->orderByDesc('saving_days')
-        ->orderByDesc('transaction_count')
         ->orderByDesc('saldo')
         ->orderBy('name')
 
