@@ -99,6 +99,8 @@ return [
 
     'key' => env('APP_KEY'),
 
+    'transaction_edit_pin_hash' => env('TRANSACTION_EDIT_PIN_HASH'),
+
     'previous_keys' => [
         ...array_filter(
             explode(',', env('APP_PREVIOUS_KEYS', ''))

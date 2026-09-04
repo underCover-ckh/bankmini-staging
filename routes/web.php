@@ -55,6 +55,8 @@ Route::middleware([RoleMiddleware::class . ':admin'])->prefix('admin')->name('ad
     // Transaksi
     Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('transactions');
     Route::get('/transactions/export', [AdminTransactionController::class, 'export'])->name('transactions.export');
+    Route::get('/transactions/{id}/edit', [AdminTransactionController::class, 'edit'])->name('transactions.edit');
+    Route::put('/transactions/{id}', [AdminTransactionController::class, 'update'])->name('transactions.update');
 
     // Keluhan Nasabah
     Route::get('/complaints', [AdminComplaintController::class, 'index'])->name('complaints');

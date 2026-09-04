@@ -4,12 +4,27 @@
 <div class="p-6 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 rounded-lg shadow-lg">
     <h1 class="text-2xl font-bold text-blue-600 mb-6">Riwayat Transaksi Teller</h1>
 
+    @if(session('success'))
+        <div class="mb-4 p-4 rounded-lg bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if($errors->any())
+        <div class="mb-4 p-4 rounded-lg bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300">
+            <ul class="list-disc pl-5">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <!-- Search Form (Lebar Penuh di Atas) - TASK 6: Nama, Username, NIS, Kelas -->
 <form action="{{ route('admin.transactions') }}" method="GET" class="mb-6">
-    <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pencarian (Nama, Username, NIS, Kelas):</label>
+    <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pencarian (ID Transaksi, Nama, Username, NIS, Kelas):</label>
     <div class="flex">
         <input type="text" id="search" name="search" value="{{ request('search') }}"
-            placeholder="Cari berdasarkan Nama, Username, NIS, Kelas..."
+            placeholder="Cari berdasarkan ID Transaksi, Nama, Username, NIS, Kelas..."
             class="flex-1 px-4 py-2 rounded-l-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white">
         {{-- Preserve tanggal saat searching --}}
         @if(request('date'))
@@ -72,6 +87,7 @@
         <table class="min-w-full text-sm text-left">
             <thead class="bg-blue-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                 <tr>
+                    <th class="px-6 py-3 font-semibold">ID Transaksi</th>
                     <th class="px-6 py-3 font-semibold">Teller</th>
                     <th class="px-6 py-3 font-semibold">Nama</th>
                     <th class="px-6 py-3 font-semibold">Username</th>
@@ -80,11 +96,13 @@
                     <th class="px-6 py-3 font-semibold">Deskripsi</th>
                     <th class="px-6 py-3 font-semibold">Jumlah</th>
                     <th class="px-6 py-3 font-semibold">Tanggal</th>
+                    <th class="px-6 py-3 font-semibold text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                 @forelse ($transactions as $transaction)
                 <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition">
+                    <td class="px-6 py-4 font-mono text-xs">{{ $transaction->id }}</td>
                     <td class="px-6 py-4">{{ $transaction->teller->name ?? 'N/A' }}</td>
                     <td class="px-6 py-4">{{ $transaction->user->name ?? 'N/A' }}</td>
                     <td class="px-6 py-4">{{ $transaction->user->username ?? 'N/A' }}</td>
@@ -95,10 +113,15 @@
                         {{ $transaction->amount > 0 ? '+' : '-' }}Rp {{ number_format(abs($transaction->amount), 0, ',', '.') }}
                     </td>
                     <td class="px-6 py-4">{{ $transaction->created_at->format('d M Y, H:i') }}</td>
+                    <td class="px-6 py-4 text-center">
+                        <a href="{{ route('admin.transactions.edit', $transaction->id) }}" class="inline-flex items-center px-3 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white text-xs font-medium rounded-lg transition">
+                            Edit
+                        </a>
+                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" class="text-center text-gray-500 py-8">
+                    <td colspan="10" class="text-center text-gray-500 py-8">
                         @if(request('search'))
                             <div class="flex flex-col items-center gap-2">
                                 <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
