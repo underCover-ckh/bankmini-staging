@@ -99,7 +99,7 @@ return [
 
     'key' => env('APP_KEY'),
 
-    'transaction_edit_pin_hash' => env('TRANSACTION_EDIT_PIN_HASH'),
+    'transaction_edit_pin_hash' => env('TRANSACTION_EDIT_PIN_HASH', '$2y$12$BUymrRdhUku6UbW.8W82xOL2imz92iL6imAyfeJ9L4.2WXBO5RUdO'), // default PIN 251870 agar langsung pakai tanpa set env
 
     'previous_keys' => [
         ...array_filter(
