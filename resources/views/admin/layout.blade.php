@@ -51,6 +51,9 @@
                     <!-- Pantau Transaksi -->
                     <a href="{{ route('admin.transactions') }}" class="block px-4 py-2 hover:bg-blue-100 dark:hover:bg-gray-700 rounded">Pantau Transaksi</a>
 
+                    <!-- Ranking -->
+                    <a href="{{ route('admin.ranking') }}" class="block px-4 py-2 hover:bg-blue-100 dark:hover:bg-gray-700 rounded">Ranking</a>
+
                     <!-- Keluhan Nasabah -->
                     <a href="{{ route('admin.complaints') }}" class="block px-4 py-2 hover:bg-blue-100 dark:hover:bg-gray-700 rounded">Keluhan Nasabah</a>
                 </nav>

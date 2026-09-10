@@ -18,6 +18,7 @@ use App\Http\Controllers\Teller\RankingController as TellerRankingController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\User\RankingController as UserRankingController;
+use App\Http\Controllers\Admin\AdminRankingController;
 
 // Route untuk halaman utama
 Route::get('/', function () {
@@ -64,6 +65,9 @@ Route::middleware([RoleMiddleware::class . ':admin'])->prefix('admin')->name('ad
     
     // Menyimpan keluhan ke database
     Route::post('/complaints', [ComplaintController::class, 'store'])->name('user.complaints.store');
+
+    // Ranking
+    Route::get('/ranking',  [AdminRankingController::class, 'ranking'])->name('ranking');
 });
 
 // Route untuk teller

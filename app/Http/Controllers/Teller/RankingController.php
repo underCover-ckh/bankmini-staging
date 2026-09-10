@@ -22,7 +22,7 @@ class RankingController extends Controller
 
     $namaBulan = $period['label'];
 
-    $rankings = User::monthlySavingsRanking(10);
+    $rankings = User::monthlySavingsRanking();
 
     return view('teller.ranking', compact(
         'namaBulan',

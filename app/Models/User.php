@@ -124,7 +124,7 @@ public static function getCurrentRankingPeriod(): array
  * 1. Jumlah hari menabung (konsistensi)
  * 2. Jika hari sama -> Saldo tabungan
  */
-public static function monthlySavingsRanking(int $limit = 10)
+public static function monthlySavingsRanking(?int $limit = null)
 {
     //Carbon::setTestNow('01-10-2026');
     $period = static::getCurrentRankingPeriod();
@@ -132,7 +132,7 @@ public static function monthlySavingsRanking(int $limit = 10)
     $startDate = $period['start'];
     $endDate   = $period['end'];
 
-    return static::query()
+    $query = static::query()
         ->select('users.*')
         ->whereNotNull('nis')
 
@@ -154,20 +154,15 @@ public static function monthlySavingsRanking(int $limit = 10)
                 ->whereBetween('created_at', [$startDate, $endDate]);
         }, 'saving_days')
 
-        // Hanya siswa yang menabung pada periode ini
-        ->whereExists(function ($query) use ($startDate, $endDate) {
-            $query->from('transactions')
-                ->whereColumn('transactions.user_id', 'users.id')
-                ->where('amount', '>', 0)
-                ->whereBetween('created_at', [$startDate, $endDate]);
-        })
-
         ->orderByDesc('saving_days')
         ->orderByDesc('saldo')
-        ->orderBy('name')
+        ->orderBy('name');
 
-        ->limit($limit)
-        ->get();
+    if ($limit !== null) {
+        $query->limit($limit);
+    }
+
+    return $query->get();
 }
 
     public function transactions()
