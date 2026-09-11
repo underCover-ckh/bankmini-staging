@@ -24,8 +24,8 @@
                 <i class="ph ph-trophy text-xl text-amber-300"></i>
                 Apresiasi Periode
             </h2>
-            <p class="text-3xl font-bold mt-4">Peringkat Nasabah</p>
-            <p class="mt-2 text-sm text-blue-100 opacity-90">Daftar siswa dengan konsistensi menabung terbaik pada periode berjalan.</p>
+            <p class="text-3xl font-bold mt-4">Semua Nasabah ({{ $rankings->count() }} Siswa)</p>
+            <p class="mt-2 text-sm text-blue-100 opacity-90">Daftar seluruh siswa dengan konsistensi menabung pada periode berjalan.</p>
         </div>
 
         <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-xl shadow-lg p-6 text-white">
@@ -42,7 +42,7 @@
     <div class="mb-8">
         <h2 class="text-lg font-semibold mb-4 flex items-center gap-2 text-gray-800 dark:text-gray-200">
             <i class="ph ph-list-numbers text-xl text-blue-500"></i>
-            Daftar Peringkat Terbaik
+            Daftar Peringkat Terbaik — Semua ({{ $rankings->count() }} Siswa)
         </h2>
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors duration-200">

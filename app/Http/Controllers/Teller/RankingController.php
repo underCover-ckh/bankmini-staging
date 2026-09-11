@@ -22,7 +22,8 @@ class RankingController extends Controller
 
     $namaBulan = $period['label'];
 
-    $rankings = User::monthlySavingsRanking();
+    // Teller melihat SEMUA peringkat (tanpa limit)
+    $rankings = User::monthlySavingsRanking(null);
 
     return view('teller.ranking', compact(
         'namaBulan',
